@@ -77,6 +77,10 @@ $app->singleton(
 
 $app->register(Barryvdh\Cors\ServiceProvider::class);
 
+if ($app->environment() !== 'production') {
+    $app->register(Laravel\Tinker\TinkerServiceProvider::class);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
