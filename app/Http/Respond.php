@@ -2,10 +2,20 @@
 
 namespace App\Http;
 
-use Symfony\Component\HttpFoundation\Response;
-
 class Respond
 {
+    /**
+     * 资源响应
+     *
+     * @param \Illuminate\Http\Resources\Json\Resource $resource 资源
+     *
+     * @return \Illuminate\Http\Resources\Json\Resource
+     */
+    public function resource(\Illuminate\Http\Resources\Json\Resource $resource)
+    {
+        return $resource;
+    }
+
     /**
      * 发送响应
      *
@@ -13,7 +23,7 @@ class Respond
      * @param  int    $status
      * @param  array  $headers
      *
-     * @return Response
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
      */
     public function send($content = '', $status = 200, array $headers = [])
     {
@@ -27,7 +37,7 @@ class Respond
      * @param  int          $status
      * @param  array        $headers
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function json($data = [], $status = 200, array $headers = [])
     {
@@ -39,7 +49,7 @@ class Respond
      *
      * @param  integer $status 状态码
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function throw($status = 200)
     {
@@ -51,7 +61,7 @@ class Respond
      *
      * @param  string $token Token
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function auth($token)
     {

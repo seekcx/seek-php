@@ -27,6 +27,8 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->configure('cors');
+$app->configure('hashids');
+$app->configure('repository');
 
 /*
 |--------------------------------------------------------------------------
@@ -60,9 +62,9 @@ $app->singleton(
 |
 */
 
- $app->middleware([
-     Barryvdh\Cors\HandleCors::class
- ]);
+$app->middleware([
+    Barryvdh\Cors\HandleCors::class
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -76,9 +78,16 @@ $app->singleton(
 */
 
 $app->register(Barryvdh\Cors\ServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(Vinkla\Hashids\HashidsServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(Propaganistas\LaravelPhone\PhoneServiceProvider::class);
+$app->register(Prettus\Repository\Providers\LumenRepositoryServiceProvider::class);
 
 if ($app->environment() !== 'production') {
     $app->register(Laravel\Tinker\TinkerServiceProvider::class);
+    $app->register(Overtrue\LaravelLang\TranslationServiceProvider::class);
+    $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 }
 
 /*

@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -11,6 +12,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
+    use FormatTrait;
+
     /**
      * A list of the exception types that should not be reported.
      *
@@ -21,6 +24,18 @@ class Handler extends ExceptionHandler
         HttpException::class,
         ModelNotFoundException::class,
         ValidationException::class,
+    ];
+
+    /**
+     * Error format
+     *
+     * @var array
+     */
+    protected $errorFormat = [
+        'message' => ':message',
+        'errors'  => ':errors',
+        'code'    => ':code',
+        'debug'   => ':debug'
     ];
 
     /**
@@ -40,11 +55,23 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $e
+     * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $e)
+    public function render($request, Exception $exception)
     {
-        return parent::render($request, $e);
+        $replacements = $this->prepareReplacements($exception);
+
+        $response = $this->errorFormat;
+
+        array_walk_recursive($response, function (&$value, $key) use ($exception, $replacements) {
+            if (starts_with($value, ':') && isset($replacements[$value])) {
+                $value = $replacements[$value];
+            }
+        });
+
+        $response = $this->recursivelyRemoveEmptyReplacements($response);
+
+        return new Response($response, $this->getStatusCode($exception), $this->getHeaders($exception));
     }
 }

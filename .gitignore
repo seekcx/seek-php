@@ -1,3 +1,5 @@
 /vendor
 /.idea
 .env
+_ide_helper.php
+/tests/report
