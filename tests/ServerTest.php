@@ -1,6 +1,8 @@
 <?php
 
-class ServerTest extends TestCase
+namespace Tests;
+
+class ServerTest extends \TestCase
 {
     /**
      * 服务首页测试

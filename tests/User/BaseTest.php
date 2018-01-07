@@ -1,31 +1,13 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
+namespace Tests\User;
 
-class GuestTest extends TestCase
+use App\Entities\User;
+use Laravel\Lumen\Testing\DatabaseTransactions;
+
+class BaseTest extends \TestCase
 {
-    use DatabaseMigrations;
-
-    /**
-     * 测试姓名
-     *
-     * @var string
-     */
-    protected $testName = 'test';
-
-    /**
-     * 测试手机号
-     *
-     * @var string
-     */
-    protected $testMobile = '13812345678';
-
-    /**
-     * 测试密码
-     *
-     * @var string
-     */
-    protected $testPassword = 'test123';
+    use DatabaseTransactions;
 
     /**
      * 测试注册功能
@@ -95,19 +77,18 @@ class GuestTest extends TestCase
     /**
      * 测试用户信息获取
      *
-     *
      */
     public function testShow()
     {
-        $user = factory(\App\Entities\User::class)->create([
+        $user = factory(User::class)->create([
             'name' => 'test'
         ]);
 
-        factory(\App\Entities\User\Stat::class)->create([
+        factory(User\Stat::class)->create([
             'user_id' => $user->id
         ]);
 
-        $id = hashids_encode(1);
+        $id = hashids_encode($user->id);
 
         $this->json('GET', '/user/' .$id)
             ->seeJson([
@@ -116,27 +97,5 @@ class GuestTest extends TestCase
             ]);
     }
 
-    /**
-     * 测试登录
-     *
-     */
-    public function testLogin()
-    {
-        factory(\App\Entities\User::class)->create([
-            'name'     => 'test',
-            'mobile'   => '13812345678',
-            'password' => 'test123'
-        ]);
 
-        $response = $this->call('POST', '/user/credentials', [
-            'mobile' => '13812345678',
-            'secret' => 'test123'
-        ]);
-
-        $this->assertEquals(200, $response->status());
-
-        $content = json_decode($response->content(), true);
-
-        $this->assertTrue(array_has($content, 'token'));
-    }
 }

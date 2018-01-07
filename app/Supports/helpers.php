@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Respond;
+use Spatie\Regex\Regex;
 use Hashids\HashidsException;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -59,6 +60,21 @@ if (! function_exists('hide_mobile')) {
     }
 }
 
+if (! function_exists('is_email')) {
+
+    /**
+     * 判断给定字符串是否是一个邮箱
+     *
+     * @param string $string
+     *
+     * @return bool
+     */
+    function is_email($string) {
+        return Regex::match('/^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}$/', $string)
+            ->hasMatch();
+    }
+}
+
 if (! function_exists('hide_email')) {
     /**
      * 隐藏邮箱
@@ -68,7 +84,7 @@ if (! function_exists('hide_email')) {
      */
     function hide_email($email)
     {
-        if (0 > strpos($email, '@')) {
+        if (!is_email($email)) {
             return $email;
         }
 
