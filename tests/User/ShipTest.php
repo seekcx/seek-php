@@ -106,6 +106,26 @@ class ShipTest extends \TestCase
             'follower_id' => $this->secondUser->id,
             'cross'       => 1
         ]);
+
+        // 已关注
+        $this->post(sprintf('/user/%s/followers', hashids_encode($this->firstUser->id)), [], [
+            'Authorization' => 'Bearer ' .$secondToken
+        ]);
+
+        $this->seeStatusCode(409);
+        $this->seeJson([
+            'message' => '你已经关注 ta 啦'
+        ]);
+
+        // 关注自己
+        $this->post(sprintf('/user/%s/followers', hashids_encode($this->firstUser->id)), [], [
+            'Authorization' => 'Bearer ' .$firstToken
+        ]);
+
+        $this->seeStatusCode(400);
+        $this->seeJson([
+            'message' => '不能关注自己'
+        ]);
     }
 
     /**
