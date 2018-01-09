@@ -4,6 +4,7 @@ namespace Tests\Auth;
 
 use App\Entities\User;
 use Laravel\Lumen\Testing\DatabaseTransactions;
+use Tymon\JWTAuth\JWTAuth;
 
 /**
  * @group AuthCredentials
@@ -11,6 +12,8 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 class CredentialsTest extends \TestCase
 {
     use DatabaseTransactions;
+
+    protected $user;
 
     /**
      * 设置基境
@@ -20,7 +23,7 @@ class CredentialsTest extends \TestCase
     {
         parent::setUp();
 
-        $user = factory(User::class)->create([
+        $this->user = factory(User::class)->create([
             'id'       => '123',  // 固定 ID，防止一个测试生成的 Token 另一个测试无法使用
             'name'     => 'test',
             'mobile'   => '13812345678',
@@ -28,7 +31,7 @@ class CredentialsTest extends \TestCase
         ]);
 
         factory(User\Stat::class)->create([
-            'user_id' => $user->id
+            'user_id' => $this->user->id
         ]);
     }
 
@@ -114,5 +117,19 @@ class CredentialsTest extends \TestCase
         $this->getUserInfo($token);
     }
 
+    /**
+     * @param $token
+     *
+     * @depends testLogin
+     */
+    public function testDestory($token)
+    {
+        $this->getUserInfo($token);
 
+        $this->delete('/user/credentials', [], [
+            'Authorization' => 'Bearer ' .$token
+        ]);
+
+        $this->getUserInfo($token, false);
+    }
 }

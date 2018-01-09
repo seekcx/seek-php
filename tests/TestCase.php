@@ -1,5 +1,8 @@
 <?php
 
+use App\Entities\User;
+use Tymon\JWTAuth\JWTAuth;
+
 abstract class TestCase extends Laravel\Lumen\Testing\TestCase
 {
     /**
@@ -10,5 +13,10 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
     public function createApplication()
     {
         return require __DIR__.'/../bootstrap/app.php';
+    }
+
+    public function createToken(User $user)
+    {
+        return app(JWTAuth::class)->fromUser($user);
     }
 }
