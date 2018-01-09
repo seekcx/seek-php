@@ -5,7 +5,9 @@
  * @var \Illuminate\Database\Eloquent\Factory $factory
  */
 
-$factory->define(App\Entities\User::class, function ($faker) {
+use App\Entities\User;
+
+$factory->define(User::class, function ($faker) {
     $avatar = sprintf(
         'https://dummyimage.com/128x128/eee/555.png&text=%s',
         $faker->randomLetter
@@ -25,7 +27,7 @@ $factory->define(App\Entities\User::class, function ($faker) {
     ];
 });
 
-$factory->define(App\Entities\User\Stat::class, function ($faker) {
+$factory->define(User\Stat::class, function ($faker) {
     $seed = rand(0, 5);
 
     return [
@@ -43,4 +45,8 @@ $factory->define(App\Entities\User\Stat::class, function ($faker) {
         'login_count'    => rand(1, 200),
         'active_count'   => rand(1, 500)
     ];
+});
+
+$factory->define(User\Ship::class, function ($faker) {
+    return [];
 });

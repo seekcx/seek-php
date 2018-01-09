@@ -23,4 +23,8 @@ $router->group([
     'middleware' => ['jwt.auth']
 ], function () use ($router) {
     $router->get('user', 'UserController@show');
+    $router->delete('user/credentials', 'Auth\CredentialsController@destroy');
+    $router->put('user/credentials', 'Auth\CredentialsController@refresh');
+    $router->post('user/{id:[0-9a-f]{8}}/followers', 'UserController@follow');
+    $router->delete('user/{id:[0-9a-f]{8}}/followers', 'UserController@unfollow');
 });

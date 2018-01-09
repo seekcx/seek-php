@@ -2,30 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Tymon\JWTAuth\JWTAuth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 class CredentialsController extends Controller
 {
-    /**
-     * JWT Auth
-     *
-     * @var JWTAuth
-     */
-    protected $auth = null;
-
-    /**
-     * 构造器
-     *
-     * @param JWTAuth $auth
-     */
-    public function __construct(JWTAuth $auth)
-    {
-        $this->auth = $auth;
-    }
-
     /**
      * 创建会话
      *
@@ -45,14 +26,32 @@ class CredentialsController extends Controller
             'password' => $request->input('secret')
         ];
 
-        try {
-            if (!$token = $this->auth->attempt($credentials)) {
-                abort(401, '手机号或密码不匹配');
-            }
-
-            return respond()->auth($token);
-        } catch (JWTException $e) {
-            abort(401, '无法生成登录凭据');
+        if (!$token = $this->guard()->attempt($credentials)) {
+            abort(401, '手机号或密码不匹配');
         }
+
+        return respond()->auth($token);
+    }
+
+    /**
+     * 刷新会话
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function refresh()
+    {
+        return respond()->auth($this->guard()->refresh());
+    }
+
+    /**
+     * 注销
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy()
+    {
+        $this->guard()->logout();
+
+        return respond()->throw(205);
     }
 }

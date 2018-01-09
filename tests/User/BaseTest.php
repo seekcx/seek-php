@@ -34,7 +34,7 @@ class BaseTest extends \TestCase
 
         $content = json_decode($response->content(), true);
 
-        $this->assertEquals($expected, array_has($content, 'token'));
+        $this->assertEquals($expected, array_has($content, 'access_token'));
 
         if ($expected) {
             $this->seeInDatabase('user', [
@@ -81,6 +81,7 @@ class BaseTest extends \TestCase
     public function testShow()
     {
         $user = factory(User::class)->create([
+            'id'   => '123',
             'name' => 'test'
         ]);
 
@@ -90,12 +91,10 @@ class BaseTest extends \TestCase
 
         $id = hashids_encode($user->id);
 
-        $this->json('GET', '/user/' .$id)
+        $this->get('/user/' .$id)
             ->seeJson([
                 'id'   => $id,
                 'name' => 'test'
             ]);
     }
-
-
 }

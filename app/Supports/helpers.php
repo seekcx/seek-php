@@ -70,7 +70,7 @@ if (! function_exists('is_email')) {
      * @return bool
      */
     function is_email($string) {
-        return Regex::match('/^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}$/', $string)
+        return Regex::match('/^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}$/', (string) $string)
             ->hasMatch();
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use Illuminate\Support\Facades\Auth;
+
 class Respond
 {
     /**
@@ -65,7 +67,11 @@ class Respond
      */
     public function auth($token)
     {
-        return $this->json(compact('token'), 200, [
+        return $this->json([
+            'access_token' => $token,
+            'token_type'   => 'bearer',
+            'expires_in'   => Auth::guard()->factory()->getTTL() * 60
+        ], 200, [
             'Authorization' => sprintf('Bearer %s', $token)
         ]);
     }

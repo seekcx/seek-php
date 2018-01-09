@@ -68,4 +68,36 @@ class UserController extends Controller
 
         return respond()->resource(new UserResource($user));
     }
+
+    /**
+     * 关注
+     *
+     * @param string $id 关注的ID
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function follow($id)
+    {
+        $user = $this->guard()->user();
+
+        $this->repository->follow(hashids_decode($id), $user->id);
+
+        return respond()->throw(205);
+    }
+
+    /**
+     * 取消关注
+     *
+     * @param string $id 关注的ID
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function unfollow($id)
+    {
+        $user = $this->guard()->user();
+
+        $this->repository->unfollow(hashids_decode($id), $user->id);
+
+        return respond()->throw(205);
+    }
 }

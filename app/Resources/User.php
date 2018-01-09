@@ -2,8 +2,9 @@
 
 namespace App\Resources;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Auth;
 use Illuminate\Http\Resources\MissingValue;
+use Illuminate\Http\Resources\Json\Resource;
 
 class User extends Resource
 {
@@ -16,9 +17,7 @@ class User extends Resource
      */
     public function toArray($request)
     {
-        $user = $request->user();
-
-        $this->whenLoaded('stat');
+        $user = Auth::guard()->user();
 
         return [
             'id'           => hashids_encode($this->id),
