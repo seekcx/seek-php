@@ -45,9 +45,7 @@ class ColumnController extends Controller
         $topics = $request->input('topics', '');
 
         $topics = collect(explode(',', $topics))
-            ->filter(function ($id) {
-                return !empty($id);
-            })
+            ->reject('empty')
             ->map('hashids_decode')
             ->toArray();
 
