@@ -27,16 +27,15 @@ class IsAvailable implements Rule
     public function passes($attribute, $value)
     {
         $ids = collect(explode(',', $value))
-            ->filter(function ($id) {
-                return !empty($id);
-            })
-            ->map('hashids_decode');
+            ->reject('empty')
+            ->map('hashids_decode')
+            ->reject('empty');
 
         $topics = Topic::whereIn('id', $ids)
             ->available()
             ->pluck('id');
 
-        $this->notPass = $topics->diff($ids);
+        $this->notPass = $ids->diff($topics);
 
         return $this->notPass->count() == 0;
     }

@@ -60,7 +60,7 @@ class Test extends \TestCase
             'name'    => $name,
             'link'    => $link,
             'summary' => $summary,
-            'topics'  => $withTopics ? hashids_encode($this->topic->id) : ''
+            'topics'  => hashids_encode($withTopics ? $this->topic->id : 99999999)
         ], $headers);
 
         $this->seeStatusCode(400);
