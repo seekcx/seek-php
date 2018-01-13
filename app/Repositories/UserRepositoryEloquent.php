@@ -83,7 +83,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
             ->exists();
 
         if ($is_follow) {
-            abort(409, '你已经关注 ta 啦');
+            abort(400, '你已经关注 ta 啦');
         }
 
         $ship = User\Ship::where('user_id', $follower_id)
@@ -124,7 +124,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
             ->first();
 
         if (!$ship) {
-            abort(409, '你没有关注 ta');
+            abort(400, '你没有关注 ta');
         }
 
         DB::transaction(function () use ($user_id, $follower_id, $ship) {

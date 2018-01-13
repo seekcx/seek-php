@@ -40,12 +40,6 @@ class Topic extends Resource
     {
         $founder = $this->whenLoaded('founder');
 
-        if ($founder instanceof MissingValue) {
-            return $founder;
-        }
-
         return $this->withUser($founder);
     }
-
-
 }

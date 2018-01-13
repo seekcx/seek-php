@@ -43,7 +43,8 @@ class AppServiceProvider extends ServiceProvider
     {
         collect([
             Repositories\Contracts\UserRepository::class => Repositories\UserRepositoryEloquent::class,
-            Repositories\Contracts\TopicRepository::class => Repositories\TopicRepositoryEloquent::class
+            Repositories\Contracts\TopicRepository::class => Repositories\TopicRepositoryEloquent::class,
+            Repositories\Contracts\ColumnRepository::class => Repositories\ColumnRepositoryEloquent::class
         ])->each(function ($repository, $contract) {
             $this->app->bind($contract, $repository);
         });

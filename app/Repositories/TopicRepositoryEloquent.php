@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Entities\Topic;
 use Prettus\Repository\Eloquent\BaseRepository;
 use App\Repositories\Contracts\TopicRepository;
+use App\Repositories\Criteria\AvailableCriteria;
 
 class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
 {
@@ -19,13 +20,11 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
     }
 
     /**
-     * 添加关注
+     * 启动
      *
-     * @param integer $user_id 用户ID
-     * @param integer $id 话题ID
      */
-    public function attachFollow($user_id, $id)
+    public function boot()
     {
-
+        $this->pushCriteria(AvailableCriteria::class);
     }
 }

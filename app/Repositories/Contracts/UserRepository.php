@@ -7,6 +7,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
  * Interface UsersRepository
+ *
  * @package namespace App\Repositories\Contracts;
  */
 interface UserRepository extends RepositoryInterface

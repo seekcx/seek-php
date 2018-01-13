@@ -112,7 +112,7 @@ class ShipTest extends \TestCase
             'Authorization' => 'Bearer ' .$secondToken
         ]);
 
-        $this->seeStatusCode(409);
+        $this->seeStatusCode(400);
         $this->seeJson([
             'message' => '你已经关注 ta 啦'
         ]);
@@ -144,7 +144,7 @@ class ShipTest extends \TestCase
             'Authorization' => 'Bearer ' .$secondToken
         ]);
 
-        $this->seeStatusCode(409);
+        $this->seeStatusCode(400);
         $this->seeJson([
             'message' => '你没有关注 ta'
         ]);

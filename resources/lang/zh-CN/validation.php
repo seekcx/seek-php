@@ -147,6 +147,8 @@ return [
         'time'                  => '时间',
         'available'             => '可用的',
         'size'                  => '大小',
+        'link'                  => '链接',
+        'topics'                => '话题'
     ],
 
 ];

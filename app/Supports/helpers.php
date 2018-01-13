@@ -21,7 +21,7 @@ if (! function_exists('hashids_encode')) {
     /**
      * Hashids 编码
      *
-     * @param  string  $id ID
+     * @param  integer  $id ID
      * @return string
      */
     function hashids_encode($id)

@@ -55,6 +55,11 @@ class Test extends \TestCase
         $this->seeStatusCode($expected);
 
         if ($expected >= 200 and $expected < 300) {
+            $this->seeInDatabase('topic', [
+                'name'    => $name,
+                'summary' => $summary
+            ]);
+
             $this->seeJson([
                 'name'          => $name,
                 'summary'       => $summary,
@@ -104,6 +109,10 @@ class Test extends \TestCase
                 'id', 'name', 'icon', 'founder', 'summary',
                 'user_count', 'article_count', 'column_count'
             ]);
+
+        // 不存在的话题
+        $this->get(sprintf('/topic/%s', hashids_encode(0)))
+            ->seeStatusCode(404);
     }
 
     public function testFollow()
@@ -123,7 +132,7 @@ class Test extends \TestCase
         // 重复关注
         $this->post(sprintf('/topic/%s/followers', hashids_encode($topic->id)), [], [
             'Authorization' => 'Bearer ' .$token
-        ])->seeStatusCode(409);
+        ])->seeStatusCode(400);
     }
 
     public function testUnfollow()
@@ -146,5 +155,4 @@ class Test extends \TestCase
             'user_id'  => $this->user->id
         ]);
     }
-
 }

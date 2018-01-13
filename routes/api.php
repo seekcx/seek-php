@@ -21,6 +21,9 @@ $router->post('user/credentials', 'Auth\CredentialsController@create');
 # 话题
 $router->get('topic/{id:[0-9a-f]{8}}', 'TopicController@show');
 
+# 专栏
+$router->get('column/{id:[0-9a-f]{8}}', 'ColumnController@show');
+
 # 需要登录
 $router->group([
     'middleware' => ['jwt.auth']
@@ -35,4 +38,7 @@ $router->group([
     $router->post('topic', 'TopicController@create');
     $router->post('topic/{id:[0-9a-f]{8}}/followers', 'TopicController@follow');
     $router->delete('topic/{id:[0-9a-f]{8}}/followers', 'TopicController@unfollow');
+
+    # 专栏
+    $router->post('column', 'ColumnController@create');
 });

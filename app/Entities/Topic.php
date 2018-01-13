@@ -40,4 +40,16 @@ class Topic extends Model
         return $this->belongsToMany(User::class, 'topic_user')
             ->withTimestamps();
     }
+
+    /**
+     * 可用
+     *
+     * @param $query \Illuminate\Database\Eloquent\Builder
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('state', 1);
+    }
 }

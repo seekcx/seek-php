@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Contracts\TopicRepository;
-use App\Resources\Topic;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use App\Resources\Topic as TopicResource;
+use App\Repositories\Contracts\TopicRepository;
 
 class TopicController extends Controller
 {
@@ -47,16 +47,17 @@ class TopicController extends Controller
             'summary'    => $request->input('summary'),
             'created_ip' => $request->ip(),
             'updated_ip' => $request->ip(),
+            'state'      => 1
         ]);
 
         return $this->show($topic->id, false);
     }
 
     /**
-     * 展示话题详情
+     * 话题详情
      *
-     * @param string|integer $id ID
-     * @param bool $decode 是否解码
+     * @param string|integer $id     ID
+     * @param bool           $decode 是否解码
      *
      * @return \Illuminate\Http\Resources\Json\Resource
      */
@@ -64,11 +65,15 @@ class TopicController extends Controller
     {
         $id = $decode ? hashids_decode($id) : $id;
 
-        $topic = $this->repository
+        $topics = $this->repository
             ->with('founder')
-            ->find($id);
+            ->findWhere(['id' => $id]);
 
-        return respond()->resource(new Topic($topic));
+        if (!$topics->count()) {
+            abort(404, '话题不存在或已被删除');
+        }
+
+        return respond()->resource(new TopicResource($topics->last()));
     }
 
     /**
@@ -86,7 +91,7 @@ class TopicController extends Controller
                 ->users()
                 ->attach($this->guard()->id());
         } catch (QueryException $e) {
-            abort(409, '你已关注过此话题了');
+            abort(400, '你已关注过此话题了');
         }
 
         return respond()->throw(205);

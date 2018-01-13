@@ -2,6 +2,8 @@
 
 namespace App\Resources\Traits;
 
+use Illuminate\Http\Resources\MissingValue;
+
 trait UserRelatedTrait
 {
     /**
@@ -9,10 +11,18 @@ trait UserRelatedTrait
      *
      * @param mixed $user
      *
-     * @return array
+     * @return array|MissingValue
      */
     protected function withUser($user)
     {
+        if ($user instanceof MissingValue) {
+            return $user;
+        }
+
+        if (empty($user)) {
+            return new MissingValue;
+        }
+
         return [
             'id'     => hashids_encode($user->id),
             'name'   => $user->name,
