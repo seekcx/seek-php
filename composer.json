@@ -16,7 +16,8 @@
         "barryvdh/laravel-ide-helper": "^2.4",
         "vinkla/hashids": "^3.3",
         "propaganistas/laravel-phone": "^3.0",
-        "spatie/regex": "^1.2"
+        "spatie/regex": "^1.2",
+        "mnabialek/laravel-sql-logger": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

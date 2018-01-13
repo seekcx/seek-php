@@ -23,14 +23,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $table = 'user';
 
     /**
-     * 允许填充的字段
+     * 不允许填充的字段
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'mobile', 'password', 'email', 'avatar', 'gender', 'birthday', 'summary',
-        'introduction', 'region_id', 'state'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * 在JSON格式化中隐藏的字段

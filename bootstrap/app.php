@@ -88,6 +88,7 @@ if ($app->environment() !== 'production') {
     $app->register(Laravel\Tinker\TinkerServiceProvider::class);
     $app->register(Overtrue\LaravelLang\TranslationServiceProvider::class);
     $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+    $app->register(Mnabialek\LaravelSqlLogger\Providers\ServiceProvider::class);
 }
 
 /*

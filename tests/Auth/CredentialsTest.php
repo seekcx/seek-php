@@ -4,7 +4,6 @@ namespace Tests\Auth;
 
 use App\Entities\User;
 use Laravel\Lumen\Testing\DatabaseTransactions;
-use Tymon\JWTAuth\JWTAuth;
 
 /**
  * @group AuthCredentials

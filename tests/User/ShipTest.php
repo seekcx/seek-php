@@ -3,8 +3,8 @@
 namespace Tests\User;
 
 use App\Entities\User;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 use Tymon\JWTAuth\JWTAuth;
+use Laravel\Lumen\Testing\DatabaseTransactions;
 
 /**
  * @group UserShip

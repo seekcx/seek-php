@@ -14,11 +14,9 @@ class Ship extends Model
     protected $table = 'user_ship';
 
     /**
-     * 允许填充的字段
+     * 不允许填充的字段
      *
      * @var array
      */
-    protected $fillable = [
-        'user_id', 'follower_id', 'cross'
-    ];
+    protected $guarded = ['id'];
 }

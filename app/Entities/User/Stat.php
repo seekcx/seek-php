@@ -40,14 +40,11 @@ class Stat extends Model
     ];
 
     /**
-     * 允许填充的字段
+     * 不允许填充的字段
      *
      * @var array
      */
-    protected $fillable = [
-        'user_id', 'register_at', 'last_login_at', 'last_active_at', 'register_ip',
-        'last_login_ip', 'last_active_ip'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * 自增主键
