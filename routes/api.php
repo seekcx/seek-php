@@ -41,4 +41,6 @@ $router->group([
 
     # 专栏
     $router->post('column', 'ColumnController@create');
+    $router->post('column/{id:[0-9a-f]{8}}/subscribers', 'ColumnController@subscribe');
+    $router->delete('column/{id:[0-9a-f]{8}}/subscribers', 'ColumnController@unsubscribe');
 });

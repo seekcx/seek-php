@@ -65,4 +65,15 @@ class Column extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    /**
+     * 关注者
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function subscriber()
+    {
+        return $this->belongsToMany(User::class, 'column_subscriber')
+            ->withTimestamps();
+    }
 }

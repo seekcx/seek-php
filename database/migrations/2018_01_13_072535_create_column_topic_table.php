@@ -14,6 +14,7 @@ class CreateColumnTopicTable extends Migration
     public function up()
     {
         Schema::create('column_topic', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('column_id')->index()->comment('专栏ID');
             $table->integer('topic_id')->index()->comment('话题ID');
             $table->timestamps();

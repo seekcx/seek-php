@@ -35,9 +35,9 @@ class Topic extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function users()
+    public function followers()
     {
-        return $this->belongsToMany(User::class, 'topic_user')
+        return $this->belongsToMany(User::class, 'topic_follower')
             ->withTimestamps();
     }
 

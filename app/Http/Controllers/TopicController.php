@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
 use App\Resources\Topic as TopicResource;
 use App\Repositories\Contracts\TopicRepository;
 
@@ -85,14 +84,17 @@ class TopicController extends Controller
      */
     public function follow($id)
     {
-        try {
-            $this->repository
-                ->find(hashids_decode($id))
-                ->users()
-                ->attach($this->guard()->id());
-        } catch (QueryException $e) {
-            abort(400, '你已关注过此话题了');
+        $topic = $this->repository->find(hashids_decode($id));
+        $exists = $topic->followers()
+            ->where('user_id', $this->guard()->id())
+            ->exists();
+
+        if ($exists) {
+            abort(400, '你已经关注了这个话题');
         }
+
+        $topic->followers()
+            ->attach($this->guard()->id());
 
         return respond()->throw(205);
     }
@@ -106,9 +108,16 @@ class TopicController extends Controller
      */
     public function unfollow($id)
     {
-        $this->repository
-            ->find(hashids_decode($id))
-            ->users()
+        $topic = $this->repository->find(hashids_decode($id));
+        $exists = $topic->followers()
+            ->where('user_id', $this->guard()->id())
+            ->exists();
+
+        if (!$exists) {
+            abort(400, '你还没有关注这个话题');
+        }
+
+        $topic->followers()
             ->detach($this->guard()->id());
 
         return respond()->throw(205);

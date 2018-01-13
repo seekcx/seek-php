@@ -86,4 +86,52 @@ class ColumnController extends Controller
 
         return respond()->resource(new ColumnResource($column));
     }
+
+    /**
+     * 订阅
+     *
+     * @param string $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function subscribe($id)
+    {
+        $column = $this->repository->find(hashids_decode($id));
+        $exists = $column->subscriber()
+            ->where('user_id', $this->guard()->id())
+            ->exists();
+
+        if ($exists) {
+            abort(400, '你已经订阅了这个专栏');
+        }
+
+        $column->subscriber()
+            ->attach($this->guard()->id());
+
+        return respond()->throw(205);
+    }
+
+    /**
+     * 取消订阅
+     *
+     * @param string $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function unsubscribe($id)
+    {
+        $column = $this->repository->find(hashids_decode($id));
+        $exists = $column->subscriber()
+            ->where('user_id', $this->guard()->id())
+            ->exists();
+
+        if (!$exists) {
+            abort(400, '你还没有订阅这个专栏');
+        }
+
+        $column->subscriber()
+            ->detach($this->guard()->id());
+
+        return respond()->throw(205);
+    }
 }

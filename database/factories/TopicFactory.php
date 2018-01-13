@@ -21,7 +21,7 @@ $factory->define(Topic::class, function ($faker) {
 
     return [
         'name'       => $name,
-        'founder_id' => rand(1, 100),
+        'founder_id' => rand(1, 30),
         'icon'       => $icon,
         'summary'    => $faker_tw->realText(rand(30, 150)),
         'created_ip' => $seed ? $faker->ipv4 : $faker->ipv6,

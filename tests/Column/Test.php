@@ -169,4 +169,61 @@ class Test extends \TestCase
                 'id', 'name', 'link', 'icon', 'summary', 'role'
             ]);
     }
+
+    public function testSubscribe()
+    {
+        $column = factory(Column::class)->create();
+        $column->topics()->attach($this->topic->id);
+        $column->members()->attach($this->user->id, [
+            'role' => Column::ROLE_OWNER
+        ]);
+
+        $token = $this->createToken($this->user);
+
+        $this->post(sprintf('/column/%s/subscribers', hashids_encode($column->id)), [], [
+            'Authorization' => 'Bearer ' . $token
+        ])->seeStatusCode(205);
+
+        $this->seeInDatabase('column_subscriber', [
+            'column_id' => $column->id,
+            'user_id'   => $this->user->id
+        ]);
+
+        // 重复关注
+        $this->post(sprintf('/column/%s/subscribers', hashids_encode($column->id)), [], [
+            'Authorization' => 'Bearer ' . $token
+        ])->seeStatusCode(400);
+    }
+
+    public function testUnsubscribe()
+    {
+        $column = factory(Column::class)->create();
+        $column->topics()->attach($this->topic->id);
+        $column->members()->attach($this->user->id, [
+            'role' => Column::ROLE_OWNER
+        ]);
+
+        $column->subscriber()->attach($this->user->id);
+
+        $token = $this->createToken($this->user);
+
+        $this->seeInDatabase('column_subscriber', [
+            'column_id' => $column->id,
+            'user_id'   => $this->user->id
+        ]);
+
+        $this->delete(sprintf('/column/%s/subscribers', hashids_encode($column->id)), [], [
+            'Authorization' => 'Bearer ' . $token
+        ])->seeStatusCode(205);
+
+        $this->notSeeInDatabase('column_subscriber', [
+            'column_id' => $column->id,
+            'user_id'   => $this->user->id
+        ]);
+
+        // 重复取消
+        $this->delete(sprintf('/column/%s/subscribers', hashids_encode($column->id)), [], [
+            'Authorization' => 'Bearer ' . $token
+        ])->seeStatusCode(400);
+    }
 }

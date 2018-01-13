@@ -124,7 +124,7 @@ class Test extends \TestCase
             'Authorization' => 'Bearer ' .$token
         ])->seeStatusCode(205);
 
-        $this->seeInDatabase('topic_user', [
+        $this->seeInDatabase('topic_follower', [
             'topic_id' => $topic->id,
             'user_id'  => $this->user->id
         ]);
@@ -138,10 +138,10 @@ class Test extends \TestCase
     public function testUnfollow()
     {
         $topic = factory(Topic::class)->create();
-        $topic->users()->attach($this->user->id);
+        $topic->followers()->attach($this->user->id);
         $token = $this->createToken($this->user);
 
-        $this->seeInDatabase('topic_user', [
+        $this->seeInDatabase('topic_follower', [
             'topic_id' => $topic->id,
             'user_id'  => $this->user->id
         ]);
@@ -150,9 +150,14 @@ class Test extends \TestCase
             'Authorization' => 'Bearer ' .$token
         ])->seeStatusCode(205);
 
-        $this->notSeeInDatabase('topic_user', [
+        $this->notSeeInDatabase('topic_follower', [
             'topic_id' => $topic->id,
             'user_id'  => $this->user->id
         ]);
+
+        // 重复取消
+        $this->delete(sprintf('/topic/%s/followers', hashids_encode($topic->id)), [], [
+            'Authorization' => 'Bearer ' .$token
+        ])->seeStatusCode(400);
     }
 }

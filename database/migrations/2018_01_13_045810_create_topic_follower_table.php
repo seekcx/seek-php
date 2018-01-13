@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateColumnMemberTable extends Migration
+class CreateTopicFollowerTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateColumnMemberTable extends Migration
      */
     public function up()
     {
-        Schema::create('column_member', function (Blueprint $table) {
+        Schema::create('topic_follower', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('topic_id')->index()->comment('话题ID');
             $table->integer('user_id')->index()->comment('用户ID');
-            $table->integer('column_id')->index()->comment('专栏ID');
-            $table->integer('role')->index()->comment('角色');
             $table->timestamps();
 
-            $table->unique(['column_id', 'user_id']);
+            $table->unique(['topic_id', 'user_id']);
         });
     }
 
@@ -31,6 +30,6 @@ class CreateColumnMemberTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('column_member');
+        Schema::dropIfExists('topic_follower');
     }
 }
