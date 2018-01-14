@@ -17,8 +17,8 @@ class CreateColumnTable extends Migration
             $table->increments('id');
             $table->char('name', 64)->unique()->comment('名称');
             $table->char('link', 32)->unique()->comment('链接');
-            $table->integer('founder_id')->index()->comment('创办人');
-            $table->integer('owner_id')->index()->comment('所有者');
+            $table->integer('founder_id')->index()->unsigned()->comment('创办人');
+            $table->integer('owner_id')->index()->unsigned()->comment('所有者');
             $table->string('icon')->default('')->comment('图标');
             $table->integer('member_count')->default(1)->comment('成员数');
             $table->string('summary', 500)->default('')->comment('描述');

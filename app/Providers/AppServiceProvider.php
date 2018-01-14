@@ -8,6 +8,7 @@ use Spatie\Regex\Regex;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,20 @@ class AppServiceProvider extends ServiceProvider
 
         $this->addRules();
         $this->setCarbonFormat();
+        $this->bindMorphMap();
+    }
+
+    /**
+     * 绑定多态模型名称映射
+     *
+     * @return void
+     */
+    protected function bindMorphMap()
+    {
+        Relation::morphMap([
+            'column' => 'App\Entities\Column',
+            'topic'  => 'App\Entities\Topic',
+        ]);
     }
 
     /**
@@ -42,8 +57,8 @@ class AppServiceProvider extends ServiceProvider
     protected function bindEloquentRepositories()
     {
         collect([
-            Repositories\Contracts\UserRepository::class => Repositories\UserRepositoryEloquent::class,
-            Repositories\Contracts\TopicRepository::class => Repositories\TopicRepositoryEloquent::class,
+            Repositories\Contracts\UserRepository::class   => Repositories\UserRepositoryEloquent::class,
+            Repositories\Contracts\TopicRepository::class  => Repositories\TopicRepositoryEloquent::class,
             Repositories\Contracts\ColumnRepository::class => Repositories\ColumnRepositoryEloquent::class
         ])->each(function ($repository, $contract) {
             $this->app->bind($contract, $repository);

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Resources\Column as ColumnResource;
 use App\Repositories\Contracts\ColumnRepository;
 use App\Rules\Topic\IsAvailable as TopicIsAvailable;
+use App\Events\Topic\CreatedEvent as TopicCreatedEvent;
 
 class ColumnController extends Controller
 {
@@ -57,6 +58,13 @@ class ColumnController extends Controller
             $topics
         );
 
+        $event = tap(new TopicCreatedEvent, function (TopicCreatedEvent $event) use ($column) {
+            $event->id     = $column->id;
+            $event->userId = $this->guard()->id();
+        });
+
+        event($event);
+
         return $this->show($column->id, false);
     }
 
@@ -64,7 +72,7 @@ class ColumnController extends Controller
      * 展示详情
      *
      * @param mixed $id
-     * @param bool [$decode=true] 是否解码
+     * @param       bool [$decode=true] 是否解码
      *
      * @return \Illuminate\Http\Resources\Json\Resource
      */

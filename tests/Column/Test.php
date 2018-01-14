@@ -2,9 +2,9 @@
 
 namespace Tests\Column;
 
-use App\Entities\Column;
 use App\Entities\User;
 use App\Entities\Topic;
+use App\Entities\Column;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
 /**
@@ -101,6 +101,14 @@ class Test extends \TestCase
                 'link'    => 'test',
                 'summary' => '这是测试专栏的描述信息'
             ]);
+
+        $content = json_decode($this->response->content(), true);
+        $id      = hashids_decode(array_get($content, 'id'));
+
+        $this->seeInDatabase('dynamic', [
+            'shareable_id'   => $id,
+            'shareable_type' => 'column'
+        ]);
 
         // 重复标题
         $this->post('/column', $data, $headers)

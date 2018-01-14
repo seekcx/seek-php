@@ -15,8 +15,8 @@ class CreateTopicFollowerTable extends Migration
     {
         Schema::create('topic_follower', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('topic_id')->index()->comment('话题ID');
-            $table->integer('user_id')->index()->comment('用户ID');
+            $table->integer('topic_id')->index()->unsigned()->comment('话题ID');
+            $table->integer('user_id')->index()->unsigned()->comment('用户ID');
             $table->timestamps();
 
             $table->unique(['topic_id', 'user_id']);

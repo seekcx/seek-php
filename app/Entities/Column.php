@@ -76,4 +76,14 @@ class Column extends Model
         return $this->belongsToMany(User::class, 'column_subscriber')
             ->withTimestamps();
     }
+
+    /**
+     * 动态
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function dynamic()
+    {
+        return $this->morphMany(Dynamic::class, 'shareable');
+    }
 }

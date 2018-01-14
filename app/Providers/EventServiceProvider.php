@@ -12,5 +12,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        'App\Events\Topic\CreatedEvent' => [
+            'App\Listeners\AddDynamic'
+        ]
     ];
 }

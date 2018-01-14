@@ -79,6 +79,7 @@ $app->middleware([
 
 $app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 $app->register(Vinkla\Hashids\HashidsServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Propaganistas\LaravelPhone\PhoneServiceProvider::class);
