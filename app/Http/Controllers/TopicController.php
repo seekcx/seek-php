@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Resources\Topic as TopicResource;
 use App\Repositories\Contracts\TopicRepository;
+use App\Events\Topic\CreatedEvent as TopicCreatedEvent;
 
 class TopicController extends Controller
 {
@@ -48,6 +49,11 @@ class TopicController extends Controller
             'updated_ip' => $request->ip(),
             'state'      => 1
         ]);
+
+        event(tap(new TopicCreatedEvent, function (TopicCreatedEvent $event) use ($topic) {
+            $event->id     = $topic->id;
+            $event->userId = $this->guard()->id();
+        }));
 
         return $this->show($topic->id, false);
     }

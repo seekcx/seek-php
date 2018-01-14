@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Events\Topic;
+namespace App\Events\Column;
 
 use App\Events\Event;
-use App\Entities\Topic;
+use App\Entities\Column;
 use App\Events\DynamicEvent;
 
 class CreatedEvent extends Event implements DynamicEvent
 {
     /**
-     * 话题ID
+     * 专栏ID
      *
      * @var integer
      */
@@ -29,11 +29,11 @@ class CreatedEvent extends Event implements DynamicEvent
      */
     public function model()
     {
-        return Topic::find($this->id);
+        return Column::find($this->id);
     }
 
     /**
-     * 话题 ID
+     * 专栏 ID
      *
      * @return integer
      */
@@ -49,7 +49,7 @@ class CreatedEvent extends Event implements DynamicEvent
      */
     public function type()
     {
-        return 'topic';
+        return 'column';
     }
 
     /**
@@ -59,7 +59,7 @@ class CreatedEvent extends Event implements DynamicEvent
      */
     public function context()
     {
-        return '创建了话题';
+        return '创建了专栏';
     }
 
     /**

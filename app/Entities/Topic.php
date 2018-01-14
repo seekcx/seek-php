@@ -52,4 +52,14 @@ class Topic extends Model
     {
         return $query->where('state', 1);
     }
+
+    /**
+     * 动态
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function dynamic()
+    {
+        return $this->morphMany(Dynamic::class, 'shareable');
+    }
 }

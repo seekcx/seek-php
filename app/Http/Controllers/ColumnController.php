@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Resources\Column as ColumnResource;
 use App\Repositories\Contracts\ColumnRepository;
 use App\Rules\Topic\IsAvailable as TopicIsAvailable;
-use App\Events\Topic\CreatedEvent as TopicCreatedEvent;
+use App\Events\Column\CreatedEvent as ColumnCreatedEvent;
 
 class ColumnController extends Controller
 {
@@ -58,12 +58,10 @@ class ColumnController extends Controller
             $topics
         );
 
-        $event = tap(new TopicCreatedEvent, function (TopicCreatedEvent $event) use ($column) {
+        event(tap(new ColumnCreatedEvent, function (ColumnCreatedEvent $event) use ($column) {
             $event->id     = $column->id;
             $event->userId = $this->guard()->id();
-        });
-
-        event($event);
+        }));
 
         return $this->show($column->id, false);
     }
