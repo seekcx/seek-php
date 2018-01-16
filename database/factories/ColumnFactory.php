@@ -11,20 +11,14 @@ use App\Entities\Column;
 $factory->define(Column::class, function ($faker) {
     $faker_tw = Faker\Factory::create('zh_TW');
 
-    $name = $faker_tw->unique()->name;
-    $icon = sprintf(
-        'https://dummyimage.com/128x128/eee/555.png&text=%s',
-        $faker->randomLetter
-    );
-
     $seed = rand(0, 5);
 
     return [
-        'name'       => $name,
+        'name'       => $faker_tw->unique()->name,
         'link'       => $faker->unique()->name,
         'founder_id' => rand(1, 100),
         'owner_id'   => rand(1, 100),
-        'icon'       => $icon,
+        'icon'       => 'https://source.unsplash.com/random/240x240',
         'summary'    => $faker_tw->realText(rand(30, 150)),
         'created_ip' => $seed ? $faker->ipv4 : $faker->ipv6,
         'updated_ip' => $seed ? $faker->ipv4 : $faker->ipv6,

@@ -24,6 +24,9 @@ $router->get('topic/{id:[0-9a-f]{8}}', 'TopicController@show');
 # 专栏
 $router->get('column/{id:[0-9a-f]{8}}', 'ColumnController@show');
 
+# 动态
+$router->get('dynamics', 'DynamicController@index');
+
 # 需要登录
 $router->group([
     'middleware' => ['jwt.auth']
@@ -43,4 +46,7 @@ $router->group([
     $router->post('column', 'ColumnController@create');
     $router->post('column/{id:[0-9a-f]{8}}/subscribers', 'ColumnController@subscribe');
     $router->delete('column/{id:[0-9a-f]{8}}/subscribers', 'ColumnController@unsubscribe');
+
+    # 动态
+    $router->post('dynamic/{id:[0-9a-f]{8}}/forks', 'DynamicController@repost');
 });

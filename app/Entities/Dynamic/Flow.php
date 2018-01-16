@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Entities;
+namespace App\Entities\Dynamic;
 
+use App\Entities\User;
+use App\Entities\Dynamic;
 use Illuminate\Database\Eloquent\Model;
 
-class Dynamic extends Model
+class Flow extends Model
 {
     /**
      * 模型对应的数据表名
      *
      * @var string
      */
-    protected $table = 'dynamic';
+    protected $table = 'dynamic_flow';
 
     /**
      * 不允许填充的字段
@@ -21,21 +23,20 @@ class Dynamic extends Model
     protected $guarded = ['id'];
 
     /**
-     * 状态
+     * 类型
      *
      */
-    const STATE_NORMAL = 1;
-    const STATE_REMOVE = 0;
-    const STATE_LOCKED = 9;
+    const TYPE_NORMAL = 1;
+    const TYPE_REPOST = 2;
 
     /**
-     * 可分享模型
+     * 动态
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function shareable()
+    public function dynamic()
     {
-        return $this->morphTo('shareable');
+        return $this->belongsTo(Dynamic::class);
     }
 
     /**

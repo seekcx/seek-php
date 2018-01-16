@@ -33,11 +33,21 @@ class CreatedEvent extends Event implements DynamicEvent
     }
 
     /**
+     * 类型
+     *
+     * @return string
+     */
+    public function type()
+    {
+        return 'topic.create';
+    }
+
+    /**
      * 话题 ID
      *
      * @return integer
      */
-    public function id()
+    public function shareableId()
     {
         return $this->id;
     }
@@ -47,19 +57,9 @@ class CreatedEvent extends Event implements DynamicEvent
      *
      * @return string
      */
-    public function type()
+    public function shareableType()
     {
         return 'topic';
-    }
-
-    /**
-     * 上下文
-     *
-     * @return array|string
-     */
-    public function context()
-    {
-        return '创建了话题';
     }
 
     /**

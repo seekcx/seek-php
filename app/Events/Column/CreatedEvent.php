@@ -37,7 +37,7 @@ class CreatedEvent extends Event implements DynamicEvent
      *
      * @return integer
      */
-    public function id()
+    public function shareableId()
     {
         return $this->id;
     }
@@ -47,19 +47,19 @@ class CreatedEvent extends Event implements DynamicEvent
      *
      * @return string
      */
-    public function type()
+    public function shareableType()
     {
         return 'column';
     }
 
     /**
-     * 上下文
+     * 类型
      *
-     * @return array|string
+     * @return string
      */
-    public function context()
+    public function type()
     {
-        return '创建了专栏';
+        return 'column.create';
     }
 
     /**

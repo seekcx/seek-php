@@ -8,11 +8,6 @@
 use App\Entities\User;
 
 $factory->define(User::class, function ($faker) {
-    $avatar = sprintf(
-        'https://dummyimage.com/128x128/eee/555.png&text=%s',
-        $faker->randomLetter
-    );
-
     return [
         'name'         => $faker->unique()->name,
         'mobile'       => $faker->phoneNumber,
@@ -22,7 +17,7 @@ $factory->define(User::class, function ($faker) {
         'birthday'     => $faker->date,
         'summary'      => 'a seeker',
         'introduction' => $faker->text(rand(10, 20)),
-        'avatar'       => $avatar,
+        'avatar'       => 'https://source.unsplash.com/random/240x240',
         'region_id'    => 10000
     ];
 });

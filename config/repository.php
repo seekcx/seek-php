@@ -16,7 +16,7 @@ return [
     */
 
     'pagination' => [
-        'limit' => 15
+        'limit' => 4
     ],
 
     /*

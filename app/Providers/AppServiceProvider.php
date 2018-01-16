@@ -57,9 +57,10 @@ class AppServiceProvider extends ServiceProvider
     protected function bindEloquentRepositories()
     {
         collect([
-            Repositories\Contracts\UserRepository::class   => Repositories\UserRepositoryEloquent::class,
-            Repositories\Contracts\TopicRepository::class  => Repositories\TopicRepositoryEloquent::class,
-            Repositories\Contracts\ColumnRepository::class => Repositories\ColumnRepositoryEloquent::class
+            Repositories\Contracts\UserRepository::class    => Repositories\UserRepositoryEloquent::class,
+            Repositories\Contracts\TopicRepository::class   => Repositories\TopicRepositoryEloquent::class,
+            Repositories\Contracts\ColumnRepository::class  => Repositories\ColumnRepositoryEloquent::class,
+            Repositories\Contracts\DynamicRepository::class => Repositories\DynamicRepositoryEloquent::class
         ])->each(function ($repository, $contract) {
             $this->app->bind($contract, $repository);
         });

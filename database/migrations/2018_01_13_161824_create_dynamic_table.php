@@ -16,7 +16,7 @@ class CreateDynamicTable extends Migration
         Schema::create('dynamic', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('author_id')->index()->unsigned()->comment('作者ID');
-            $table->string('context')->comment('上下文');
+            $table->char('type', 32)->index()->comment('类型');
             $table->integer('shareable_id')->index()->unsigned()->comment('分享ID');
             $table->char('shareable_type', 32)->index()->comment('分享类型');
             $table->ipAddress('created_ip')->default('')->comment('创建IP');

@@ -12,25 +12,25 @@ interface DynamicEvent
     public function model();
 
     /**
-     * 上下文
+     * 类型
      *
-     * @return array|string
+     * @return string
      */
-    public function context();
+    public function type();
 
     /**
      * 可分享 ID
      *
      * @return integer
      */
-    public function id();
+    public function shareableId();
 
     /**
-     * 类型
+     * 可分享类型
      *
      * @return string
      */
-    public function type();
+    public function shareableType();
 
     /**
      * 作者ID

@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-use Illuminate\Support\Facades\Auth;
+use Auth;
 
 class Respond
 {

@@ -2,9 +2,11 @@
 
 namespace App\Listeners;
 
+use DB;
 use Log;
 use App\Events\DynamicEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Entities\Dynamic\Flow as DynamicFlow;
 
 class AddDynamic implements ShouldQueue
 {
@@ -25,20 +27,29 @@ class AddDynamic implements ShouldQueue
         $model = $event->model();
 
         if (!$model) {
-            Log::info('丢失可分享模型', [
-                'id'      => $event->id,
-                'type'    => $event->type(),
-                'context' => $event->context()
+            Log::info('丢失关联模型', [
+                'type'           => $event->type(),
+                'shareable_id'   => $event->shareableId(),
+                'shareable_type' => $event->shareableType(),
+                'context'        => $event->context()
             ]);
 
             return;
         }
 
-        $model->dynamic()->create([
-            'author_id'  => $event->authorId(),
-            'context'    => json_encode($event->context(), JSON_UNESCAPED_UNICODE),
-            'created_ip' => $event->ip(),
-            'updated_ip' => $event->ip()
-        ]);
+        DB::transaction(function () use ($event, $model) {
+            $dynamic = $model->dynamic()->create([
+                'author_id'  => $event->authorId(),
+                'type'       => $event->type(),
+                'created_ip' => $event->ip(),
+                'updated_ip' => $event->ip()
+            ]);
+
+            DynamicFlow::create([
+                'author_id'  => $event->authorId(),
+                'dynamic_id' => $dynamic->id,
+                'type'       => DynamicFlow::TYPE_NORMAL
+            ]);
+        });
     }
 }

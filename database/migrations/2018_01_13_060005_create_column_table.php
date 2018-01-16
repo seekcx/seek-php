@@ -20,8 +20,9 @@ class CreateColumnTable extends Migration
             $table->integer('founder_id')->index()->unsigned()->comment('创办人');
             $table->integer('owner_id')->index()->unsigned()->comment('所有者');
             $table->string('icon')->default('')->comment('图标');
-            $table->integer('member_count')->default(1)->comment('成员数');
             $table->string('summary', 500)->default('')->comment('描述');
+            $table->integer('member_count')->default(1)->comment('成员数');
+            $table->integer('article_count')->default(0)->comment('文章数');
             $table->ipAddress('created_ip')->default('')->comment('创建IP');
             $table->ipAddress('updated_ip')->default('')->comment('更新IP');
             $table->timestamps();
