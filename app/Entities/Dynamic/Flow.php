@@ -48,4 +48,14 @@ class Flow extends Model
     {
         return $this->belongsTo(User::class, 'author_id');
     }
+
+    /**
+     * 来源
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function referer()
+    {
+        return $this->belongsTo(Flow::class, 'referer_id');
+    }
 }

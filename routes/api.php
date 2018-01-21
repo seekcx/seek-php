@@ -26,6 +26,7 @@ $router->get('column/{id:[0-9a-f]{8}}', 'ColumnController@show');
 
 # 动态
 $router->get('dynamics', 'DynamicController@index');
+$router->get('dynamic/{id:[0-9a-f]{8}}', 'DynamicController@show');
 
 # 需要登录
 $router->group([

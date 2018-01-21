@@ -20,21 +20,60 @@ class Dynamic extends Resource
      */
     public function toArray($request)
     {
-        $original_author = $this->when($this->isRepost(), $this->withUser($this->dynamic->author));
+        return [
+            'id'             => hashids_encode($this->id),
+            'author'         => $this->withUser($this->author),
+            'referer'        => $this->whenLoadedReferer(),
+            'original'       => $this->whenLoadedOriginal(),
+            'type'           => $this->type,
+            'category'       => $this->dynamic->type,
+            'content'        => $this->parseContent(),
+            'context'        => $this->parseContext(),
+            'repost_count'   => $this->repost_count,
+            'comment_count'  => $this->comment_count,
+            'fabulous_count' => $this->fabulous_count,
+            'created_at'     => (string)$this->created_at,
+            'updated_at'     => (string)$this->updated_at,
+        ];
+    }
+
+    protected function whenLoadedOriginal()
+    {
+        if (!$this->isRepost()) {
+            return new MissingValue;
+        }
+
+        $dynamic = $this->whenLoaded('dynamic');
+
+        $has    = array_key_exists('author', $dynamic->toArray());
+        $author = $this->when($has, function () use ($dynamic) {
+            return $this->withUser($dynamic->author);
+        });
 
         return [
-            'id'              => hashids_encode($this->id),
-            'author'          => $this->withUser($this->author),
-            'original_author' => $original_author,
-            'type'            => $this->type,
-            'category'        => $this->dynamic->type,
-            'content'         => $this->parseContent(),
-            'context'         => $this->parseContext(),
-            'repost_count'   => $this->repost_count,
-            'comment_count'   => $this->comment_count,
-            'fabulous_count'  => $this->fabulous_count,
-            'created_at'      => (string)$this->created_at,
-            'updated_at'      => (string)$this->updated_at,
+            'id'         => hashids_encode($dynamic->id),
+            'author'     => $author,
+            'type'       => $dynamic->type,
+            'content'    => $this->parseType($dynamic->type, $dynamic->content),
+            'created_at' => (string)$dynamic->created_at
+        ];
+    }
+
+    protected function whenLoadedReferer()
+    {
+        $referer = $this->whenLoaded('referer');
+
+        if ($referer instanceof MissingValue or !$referer) {
+            return new MissingValue;
+        }
+
+        return [
+            'id'             => hashids_encode($referer->id),
+            'author'         => $this->withUser($this->referer->author),
+            'content'        => $referer->content,
+            'repost_count'   => $referer->repost_count,
+            'comment_count'  => $referer->comment_count,
+            'fabulous_count' => $referer->fabulous_count
         ];
     }
 
@@ -49,6 +88,26 @@ class Dynamic extends Resource
     }
 
     /**
+     * 通过类型解析内容
+     *
+     * @param string $type    类型
+     * @param string $default 默认
+     *
+     * @return string
+     */
+    protected function parseType($type, $default = '')
+    {
+        switch ($type) {
+            case 'topic.create':
+                return '创建了话题';
+            case 'column.create':
+                return '创建了专栏';
+            default:
+                return $default;
+        }
+    }
+
+    /**
      * 解析内容
      *
      * @return string
@@ -59,14 +118,7 @@ class Dynamic extends Resource
             return $this->content;
         }
 
-        switch ($this->dynamic->type) {
-            case 'topic.create':
-                return '创建了话题';
-            case 'column.create':
-                return '创建了专栏';
-            default:
-                return $this->content;
-        }
+        return $this->parseType($this->dynamic->type, $this->content);
     }
 
     /**

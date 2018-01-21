@@ -4,3 +4,4 @@
 .env
 _ide_helper.php
 /tests/report
+.phpstorm.meta.php

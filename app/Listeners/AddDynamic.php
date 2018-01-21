@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use Carbon\Carbon;
 use DB;
 use Log;
 use App\Events\DynamicEvent;
@@ -37,18 +38,24 @@ class AddDynamic implements ShouldQueue
             return;
         }
 
-        DB::transaction(function () use ($event, $model) {
+        $triggerAt = $event->triggerAt;
+
+        DB::transaction(function () use ($event, $model, $triggerAt) {
             $dynamic = $model->dynamic()->create([
                 'author_id'  => $event->authorId(),
                 'type'       => $event->type(),
                 'created_ip' => $event->ip(),
-                'updated_ip' => $event->ip()
+                'updated_ip' => $event->ip(),
+                'created_at' => $triggerAt,
+                'updated_at' => $triggerAt,
             ]);
 
             DynamicFlow::create([
                 'author_id'  => $event->authorId(),
                 'dynamic_id' => $dynamic->id,
-                'type'       => DynamicFlow::TYPE_NORMAL
+                'type'       => DynamicFlow::TYPE_NORMAL,
+                'created_at' => $triggerAt,
+                'updated_at' => $triggerAt,
             ]);
         });
     }

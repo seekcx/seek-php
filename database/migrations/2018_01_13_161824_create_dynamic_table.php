@@ -17,6 +17,7 @@ class CreateDynamicTable extends Migration
             $table->increments('id');
             $table->integer('author_id')->index()->unsigned()->comment('作者ID');
             $table->char('type', 32)->index()->comment('类型');
+            $table->string('content', 500)->default('')->comment('内容');
             $table->integer('shareable_id')->index()->unsigned()->comment('分享ID');
             $table->char('shareable_type', 32)->index()->comment('分享类型');
             $table->ipAddress('created_ip')->default('')->comment('创建IP');

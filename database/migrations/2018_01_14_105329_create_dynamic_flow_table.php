@@ -17,6 +17,7 @@ class CreateDynamicFlowTable extends Migration
             $table->increments('id');
             $table->integer('dynamic_id')->index()->unsigned()->comment('动态ID');
             $table->integer('author_id')->index()->unsigned()->comment('作者ID');
+            $table->integer('referer_id')->index()->default(0)->unsigned()->comment('引用ID');
             $table->tinyInteger('type')->index()->unsigned()->comment('类型');
             $table->string('content', 500)->default('')->comment('内容');
             $table->integer('repost_count')->default(0)->comment('转发次数');

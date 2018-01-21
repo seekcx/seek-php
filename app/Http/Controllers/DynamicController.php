@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Resources\Dynamic as DynamicResource;
 use App\Repositories\Contracts\DynamicRepository;
-use Illuminate\Http\Request;
 
 class DynamicController extends Controller
 {
@@ -28,32 +28,60 @@ class DynamicController extends Controller
     /**
      * 动态
      *
+     * @param Request $request 请求
+     *
      * @return \Illuminate\Http\Resources\Json\Resource
      */
-    public function index()
+    public function index(Request $request)
     {
+        $offset = $request->input('offset', hashids_encode(0));
+        $offset = hashids_decode($offset);
+
         $dynamics = $this->guard()->check()
-            ? $this->repository->forUser($this->guard()->id())
-            : $this->repository->defaults();
+            ? $this->repository->forUser($this->guard()->id(), $offset)
+            : $this->repository->defaults($offset);
 
         return respond()->resource(DynamicResource::collection($dynamics));
     }
 
+    /**
+     * 转发
+     *
+     * @param Request $request 请求
+     * @param string $id ID
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function repost(Request $request, $id)
     {
         $this->validate($request, [
-            'comment' => ['max:500']
+            'comment' => 'max:500'
         ]);
 
         $user_id = $this->guard()->id();
         $id      = hashids_decode($id);
         $comment = $request->input('comment', '');
 
-        $this->repository->forward($user_id, $id, $comment);
+        $this->repository->repost($user_id, $id, $comment);
+
+        return respond()->throw(204);
     }
 
+    /**
+     * 动态详情
+     *
+     * @param string $id ID
+     *
+     * @return \Illuminate\Http\Resources\Json\Resource
+     */
     public function show($id)
     {
+        $id = hashids_decode($id);
 
+        $dynamic = $this->repository->with([
+            'author', 'referer', 'dynamic.shareable', 'dynamic.author'
+        ])->find($id);
+
+        return respond()->resource(new DynamicResource($dynamic));
     }
 }

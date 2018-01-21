@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Entities\User\Ship;
 use App\Entities\User\Stat;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Authenticatable;
@@ -76,5 +77,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function stat()
     {
         return $this->hasOne(Stat::class);
+    }
+
+    /**
+     * 关联用户数据
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function ship()
+    {
+        return $this->hasOne(Ship::class);
     }
 }

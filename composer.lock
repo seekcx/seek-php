@@ -1958,17 +1958,75 @@
             "time": "2017-12-18T16:25:11+00:00"
         },
         {
-            "name": "mnabialek/laravel-sql-logger",
-            "version": "v1.1.3",
+            "name": "lcobucci/jwt",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mnabialek/laravel-sql-logger.git",
-                "reference": "ff4790a59ed8d27a2e6a41fa78931d4a90a76436"
+                "url": "https://github.com/lcobucci/jwt.git",
+                "reference": "0b5930be73582369e10c4d4bb7a12bac927a203c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/mnabialek/laravel-sql-logger/ff4790a59ed8d27a2e6a41fa78931d4a90a76436.zip",
-                "reference": "ff4790a59ed8d27a2e6a41fa78931d4a90a76436",
+                "url": "https://files.phpcomposer.com/files/lcobucci/jwt/0b5930be73582369e10c4d4bb7a12bac927a203c.zip",
+                "reference": "0b5930be73582369e10c4d4bb7a12bac927a203c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "mdanter/ecc": "~0.3.1",
+                "mikey179/vfsstream": "~1.5",
+                "phpmd/phpmd": "~2.2",
+                "phpunit/php-invoker": "~1.1",
+                "phpunit/phpunit": "~4.5",
+                "squizlabs/php_codesniffer": "~2.3"
+            },
+            "suggest": {
+                "mdanter/ecc": "Required to use Elliptic Curves based algorithms."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Lcobucci\\JWT\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Luís Otávio Cobucci Oblonczyk",
+                    "email": "lcobucci@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple library to work with JSON Web Token and JSON Web Signature",
+            "keywords": [
+                "JWS",
+                "jwt"
+            ],
+            "time": "2017-09-01T08:23:26+00:00"
+        },
+        {
+            "name": "mnabialek/laravel-sql-logger",
+            "version": "v1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mnabialek/laravel-sql-logger.git",
+                "reference": "ffe44cf0cc5bd96864f19aa0c8db44d719ff6f09"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/mnabialek/laravel-sql-logger/ffe44cf0cc5bd96864f19aa0c8db44d719ff6f09.zip",
+                "reference": "ffe44cf0cc5bd96864f19aa0c8db44d719ff6f09",
                 "shasum": ""
             },
             "require": {
@@ -2010,7 +2068,7 @@
                 "sql",
                 "sql logger"
             ],
-            "time": "2017-09-03T11:43:39+00:00"
+            "time": "2018-01-18T11:28:24+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2444,16 +2502,16 @@
         },
         {
             "name": "prettus/l5-repository",
-            "version": "2.6.30",
+            "version": "2.6.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/andersao/l5-repository.git",
-                "reference": "e70bb0da553024836c1a27946de274b995a589b6"
+                "reference": "c328a0a7de4e98716b7bda238a058be1092fbffb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/andersao/l5-repository/e70bb0da553024836c1a27946de274b995a589b6.zip",
-                "reference": "e70bb0da553024836c1a27946de274b995a589b6",
+                "url": "https://files.phpcomposer.com/files/andersao/l5-repository/c328a0a7de4e98716b7bda238a058be1092fbffb.zip",
+                "reference": "c328a0a7de4e98716b7bda238a058be1092fbffb",
                 "shasum": ""
             },
             "require": {
@@ -2503,7 +2561,7 @@
                 "model",
                 "repository"
             ],
-            "time": "2018-01-13T16:21:44+00:00"
+            "time": "2018-01-16T19:14:01+00:00"
         },
         {
             "name": "prettus/laravel-validation",
@@ -3782,12 +3840,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tymondesigns/jwt-auth.git",
-                "reference": "b24b8fc22bcea3c6942efd3f25917d115f8a9c29"
+                "reference": "19d556d9a50710eaa272b5b3b03e30517cc6dfec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/tymondesigns/jwt-auth/b24b8fc22bcea3c6942efd3f25917d115f8a9c29.zip",
-                "reference": "b24b8fc22bcea3c6942efd3f25917d115f8a9c29",
+                "url": "https://files.phpcomposer.com/files/tymondesigns/jwt-auth/19d556d9a50710eaa272b5b3b03e30517cc6dfec.zip",
+                "reference": "19d556d9a50710eaa272b5b3b03e30517cc6dfec",
                 "shasum": ""
             },
             "require": {
@@ -3795,6 +3853,7 @@
                 "illuminate/contracts": "5.1.* || 5.2.* || 5.3.* || 5.4.* || 5.5.*",
                 "illuminate/http": "5.1.* || 5.2.* || 5.3.* || 5.4.* || 5.5.*",
                 "illuminate/support": "5.1.* || 5.2.* || 5.3.* || 5.4.* || 5.5.*",
+                "lcobucci/jwt": "^3.2",
                 "namshi/jose": "^7.0",
                 "nesbot/carbon": "^1.0",
                 "php": "^5.5.9 || ^7.0"
@@ -3848,7 +3907,7 @@
                 "jwt",
                 "laravel"
             ],
-            "time": "2018-01-14T00:22:31+00:00"
+            "time": "2018-01-16T23:49:14+00:00"
         },
         {
             "name": "vinkla/hashids",
@@ -3977,16 +4036,16 @@
     "packages-dev": [
         {
             "name": "caouecs/laravel-lang",
-            "version": "3.0.40",
+            "version": "3.0.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/caouecs/Laravel-lang.git",
-                "reference": "f16bcfd35a8ea5d929523f7e2ba193914b3f06a5"
+                "reference": "1ec55fb2d6315fd4f977c5e2419ba530efea5d3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/caouecs/Laravel-lang/f16bcfd35a8ea5d929523f7e2ba193914b3f06a5.zip",
-                "reference": "f16bcfd35a8ea5d929523f7e2ba193914b3f06a5",
+                "url": "https://files.phpcomposer.com/files/caouecs/Laravel-lang/1ec55fb2d6315fd4f977c5e2419ba530efea5d3f.zip",
+                "reference": "1ec55fb2d6315fd4f977c5e2419ba530efea5d3f",
                 "shasum": ""
             },
             "require-dev": {
@@ -4015,7 +4074,7 @@
                 "laravel",
                 "lpm"
             ],
-            "time": "2018-01-10T10:27:43+00:00"
+            "time": "2018-01-19T08:47:27+00:00"
         },
         {
             "name": "codedungeon/phpunit-result-printer",

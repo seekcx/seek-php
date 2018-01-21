@@ -55,16 +55,15 @@ class UserController extends Controller
     /**
      * 用户详情
      *
-     * @param Request     $request 请求
      * @param string|null $id      目标用户 ID
      *
      * @return \Illuminate\Http\Resources\Json\Resource
      */
-    public function show(Request $request, $id = null)
+    public function show($id = null)
     {
         $user = $this->repository
-            ->with('stat')
-            ->find(is_null($id) ? $request->user()->id : hashids_decode($id));
+            ->with(['stat'])
+            ->find(is_null($id) ? $this->guard()->id() : hashids_decode($id));
 
         return respond()->resource(new UserResource($user));
     }
