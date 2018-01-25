@@ -19,20 +19,6 @@ interface DynamicEvent
     public function type();
 
     /**
-     * 可分享 ID
-     *
-     * @return integer
-     */
-    public function shareableId();
-
-    /**
-     * 可分享类型
-     *
-     * @return string
-     */
-    public function shareableType();
-
-    /**
      * 作者ID
      *
      * @return integer

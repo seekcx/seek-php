@@ -23,7 +23,7 @@ class CreateDynamicTable extends Migration
             $table->ipAddress('created_ip')->default('')->comment('创建IP');
             $table->ipAddress('updated_ip')->default('')->comment('更新IP');
             $table->timestamps();
-            $table->tinyInteger('state')->default(1)->comment('0、已隐藏，1、正常');
+            $table->tinyInteger('state')->default(1)->comment('-1、已锁定，0、已删除，1、正常');
 
             $table->unique(['shareable_id', 'shareable_type']);
         });

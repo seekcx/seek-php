@@ -27,17 +27,6 @@ class AddDynamic implements ShouldQueue
     {
         $model = $event->model();
 
-        if (!$model) {
-            Log::info('丢失关联模型', [
-                'type'           => $event->type(),
-                'shareable_id'   => $event->shareableId(),
-                'shareable_type' => $event->shareableType(),
-                'context'        => $event->context()
-            ]);
-
-            return;
-        }
-
         $triggerAt = $event->triggerAt;
 
         DB::transaction(function () use ($event, $model, $triggerAt) {

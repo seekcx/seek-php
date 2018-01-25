@@ -31,12 +31,32 @@ class Dynamic extends Resource
             'context'        => $this->parseContext(),
             'repost_count'   => $this->repost_count,
             'comment_count'  => $this->comment_count,
+            'is_fabulous'    => $this->fabulous_count ? 1 : 0,
             'fabulous_count' => $this->fabulous_count,
+            'fabulous_user'  => $this->whenloadedFabulousUser(),
+            'fabulous_type'  => $this->fabulous_type,
             'created_at'     => (string)$this->created_at,
             'updated_at'     => (string)$this->updated_at,
         ];
     }
 
+    /**
+     * 最后点赞的用户
+     *
+     * @return array|MissingValue
+     */
+    protected function whenloadedFabulousUser()
+    {
+        $user = $this->whenLoaded('fabulousUser');
+
+        return $this->withUser($user);
+    }
+
+    /**
+     * 原始动态信息
+     *
+     * @return array|MissingValue
+     */
     protected function whenLoadedOriginal()
     {
         if (!$this->isRepost()) {
@@ -59,6 +79,11 @@ class Dynamic extends Resource
         ];
     }
 
+    /**
+     * 转发的原动态流信息
+     *
+     * @return array|MissingValue
+     */
     protected function whenLoadedReferer()
     {
         $referer = $this->whenLoaded('referer');
@@ -128,6 +153,10 @@ class Dynamic extends Resource
      */
     protected function parseContext()
     {
+        if (!$this->dynamic->shareable) {
+            return new MissingValue;
+        }
+
         switch ($this->dynamic->type) {
             case 'topic.create':
                 return $this->parseTopic();

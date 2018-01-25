@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use DB;
 use App\Entities\Dynamic;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Prettus\Repository\Eloquent\BaseRepository;
 use App\Repositories\Contracts\dynamicRepository;
 
@@ -34,7 +35,9 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
      */
     public function defaults($offset_id = 0, $limit = 15)
     {
-        $builder = $this->model->with(['author', 'dynamic.author', 'dynamic.shareable']);
+        $builder = $this->model->with([
+            'author', 'dynamic.author', 'fabulousUser', 'dynamic.shareable'
+        ])->withCount('fabulous');
 
         if ($offset_id != 0) {
             $builder->where('id', '<', $offset_id);
@@ -51,17 +54,33 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
      * 转发
      *
      * @param integer $user_id 用户 ID
-     * @param integer $id 动态 ID
-     * @param string $comment 评论
+     * @param integer $id      动态 ID
+     * @param string  $comment 评论
      *
      * @return Dynamic\Flow
      */
     public function repost($user_id, $id, $comment = '')
     {
-        $flow = $this->with(['dynamic', 'author'])->find($id);
+        $flow = Dynamic\Flow::with(['dynamic', 'author'])->find($id);
 
-        if (!$flow or $flow->dynamic->state == Dynamic::STATE_REMOVE) {
-            abort(404, '动态不存在或已被删除');
+        if (!$flow) {
+            abort(404, '动态不存在');
+        }
+
+        if ($flow->state == Dynamic\Flow::STATE_REMOVE) {
+            abort(404, '动态已被删除');
+        }
+
+        if ($flow->state == Dynamic\Flow::STATE_LOCKED) {
+            abort(403, '动态已被锁定');
+        }
+
+        if ($flow->dynamic->state == Dynamic::STATE_LOCKED) {
+            abort(403, '原始动态已被锁定');
+        }
+
+        if ($flow->dynamic->state == Dynamic::STATE_REMOVE) {
+            abort(404, '原始动态已被删除');
         }
 
         // 如果转发的动态本身已经是转发，增加转发内容
@@ -84,5 +103,84 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
         });
 
         return $dynamic;
+    }
+
+    /**
+     * 添加赞
+     *
+     * @param integer $user_id 用户 ID
+     * @param integer $id ID
+     * @param integer $type 类型
+     */
+    public function addFabulous($user_id, $id, $type = 1)
+    {
+        $types = collect([
+            Dynamic\Fabulous::TYPE_PRAISE,
+            Dynamic\Fabulous::TYPE_LIKE,
+            Dynamic\Fabulous::TYPE_SMILE,
+        ]);
+
+        if (!$types->contains($type)) {
+            abort(400, '未知的类型');
+        }
+
+        $exists = Dynamic\Fabulous::where('user_id', $user_id)
+            ->where('flow_id', $id)
+            ->exists();
+
+        if ($exists) {
+            abort(409, '你已经赞过这个动态了');
+        }
+
+        DB::transaction(function () use ($user_id, $id, $type) {
+            Dynamic\Fabulous::create([
+                'user_id' => $user_id,
+                'flow_id' => $id,
+                'type'    => $type
+            ]);
+
+            $flow = Dynamic\Flow::find($id);
+
+            $flow->increment('fabulous_count', 1, [
+                'fabulous_user' => $user_id,
+                'fabulous_type' => $flow->fabulous_type | $type
+            ]);
+        });
+    }
+
+    /**
+     * 取消赞
+     *
+     * @param integer $user_id 用户 ID
+     * @param integer $id ID
+     *
+     * @return Dynamic\Fabulous
+     */
+    public function delFabulous($user_id, $id)
+    {
+        $fabulous = Dynamic\Fabulous::where('user_id', $user_id)
+            ->where('flow_id', $id)
+            ->first();
+
+        if (!$fabulous) {
+            abort(404, '你没有赞过这个动态');
+        }
+
+        DB::transaction(function () use ($fabulous, $id) {
+            // 最后一个点赞的用户
+            $user_id = Dynamic\Fabulous::where('flow_id', $id)
+                ->where('user_id', '!=', $fabulous->user_id)
+                ->orderBy('created_at', 'desc')
+                ->value('user_id');
+
+            $flow = Dynamic\Flow::where('id', $id)->first();
+
+            $flow->decrement('fabulous_count', 1, [
+                'fabulous_type' => $flow->fabulous_type ^ $fabulous->type,
+                'fabulous_user' => (int) $user_id
+            ]);
+
+            $fabulous->delete();
+        });
     }
 }

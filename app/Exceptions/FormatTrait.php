@@ -90,16 +90,16 @@ trait FormatTrait
     protected function getMessage(Exception $exception)
     {
         if ($exception instanceof PDOException) {
-            return 'Storage service exception';
+            return 'storage service exception';
         }
 
         if ($exception instanceof TokenBlacklistedException) {
-            return 'Invalid session or expired';
+            return 'invalid session or expired';
         }
 
         if ($exception instanceof ModelNotFoundException or
             $exception instanceof HashidsException) {
-            return 'Not found';
+            return 'not found';
         }
 
         return $exception->getMessage();
@@ -121,7 +121,7 @@ trait FormatTrait
         }
 
         $replacements = [
-            ':message' => ucfirst(strtolower($message))
+            ':message' => strtolower($message)
         ];
 
         if ($exception instanceof ValidationException) {

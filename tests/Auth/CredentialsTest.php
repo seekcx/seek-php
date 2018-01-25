@@ -88,7 +88,7 @@ class CredentialsTest extends \TestCase
             ]);
         } else {
             $this->seeJson([
-                'message' => 'The token has been blacklisted'
+                'message' => 'invalid session or expired'
             ]);
         }
     }

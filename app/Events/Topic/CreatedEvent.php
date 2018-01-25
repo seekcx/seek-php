@@ -43,26 +43,6 @@ class CreatedEvent extends Event implements DynamicEvent
     }
 
     /**
-     * 话题 ID
-     *
-     * @return integer
-     */
-    public function shareableId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * 类型
-     *
-     * @return string
-     */
-    public function shareableType()
-    {
-        return 'topic';
-    }
-
-    /**
      * 作者ID
      *
      * @return integer

@@ -30,6 +30,14 @@ class Flow extends Model
     const TYPE_REPOST = 2;
 
     /**
+     * 状态
+     *
+     */
+    const STATE_NORMAL = 1;
+    const STATE_REMOVE = 0;
+    const STATE_LOCKED = -1;
+
+    /**
      * 动态
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -57,5 +65,20 @@ class Flow extends Model
     public function referer()
     {
         return $this->belongsTo(Flow::class, 'referer_id');
+    }
+
+    /**
+     * 最后一个点赞的用户
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function fabulousUser()
+    {
+        return $this->belongsTo(User::class, 'fabulous_user');
+    }
+
+    public function fabulous()
+    {
+        return $this->hasMany(Fabulous::class, 'flow_id');
     }
 }

@@ -30,7 +30,8 @@ $router->get('dynamic/{id:[0-9a-f]{8}}', 'DynamicController@show');
 
 # 需要登录
 $router->group([
-    'middleware' => ['jwt.auth']
+    'middleware' => ['auth:force'],
+//    'middleware' => ['jwt.auth']
 ], function () use ($router) {
     $router->get('user', 'UserController@show');
     $router->delete('user/credentials', 'Auth\CredentialsController@destroy');
@@ -50,4 +51,6 @@ $router->group([
 
     # 动态
     $router->post('dynamic/{id:[0-9a-f]{8}}/forks', 'DynamicController@repost');
+    $router->post('dynamic/{id:[0-9a-f]{8}}/fabulous', 'DynamicController@addFabulous');
+    $router->delete('dynamic/{id:[0-9a-f]{8}}/fabulous', 'DynamicController@delFabulous');
 });

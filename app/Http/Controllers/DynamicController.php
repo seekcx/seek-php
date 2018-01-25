@@ -62,9 +62,9 @@ class DynamicController extends Controller
         $id      = hashids_decode($id);
         $comment = $request->input('comment', '');
 
-        $this->repository->repost($user_id, $id, $comment);
+        $this->repository->repost($user_id, $id, (string) $comment);
 
-        return respond()->throw(204);
+        return respond()->throw(205);
     }
 
     /**
@@ -78,10 +78,52 @@ class DynamicController extends Controller
     {
         $id = hashids_decode($id);
 
-        $dynamic = $this->repository->with([
+        $this->repository->with([
             'author', 'referer', 'dynamic.shareable', 'dynamic.author'
-        ])->find($id);
+        ]);
+
+        if ($this->guard()->check()) {
+            $this->repository->withCount(['fabulous' => function ($query) {
+                $query->where('user_id', $this->guard()->id());
+            }]);
+        }
+
+        $dynamic = $this->repository->find($id);
 
         return respond()->resource(new DynamicResource($dynamic));
+    }
+
+    /**
+     * 赞
+     *
+     * @param Request $request 请求
+     * @param string $id ID
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addFabulous(Request $request, $id)
+    {
+        $id   = hashids_decode($id);
+        $type = $request->input('type', 1);
+
+        $this->repository->addFabulous($this->guard()->id(), $id, $type);
+
+        return respond()->throw(205);
+    }
+
+    /**
+     * 取消赞
+     *
+     * @param string $id ID
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function delFabulous($id)
+    {
+        $id = hashids_decode($id);
+
+        $this->repository->delFabulous($this->guard()->id(), $id);
+
+        return respond()->throw(205);
     }
 }

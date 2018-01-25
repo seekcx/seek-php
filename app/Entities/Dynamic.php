@@ -26,7 +26,7 @@ class Dynamic extends Model
      */
     const STATE_NORMAL = 1;
     const STATE_REMOVE = 0;
-    const STATE_LOCKED = 9;
+    const STATE_LOCKED = -1;
 
     /**
      * 可分享模型
