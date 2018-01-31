@@ -329,6 +329,11 @@ class Test extends \TestCase
 
     public function testNotLogin()
     {
+        $this->get('/dynamics')
+            ->seeStatusCode(200);
 
+        $content = json_decode($this->response->content(), true);
+
+        $this->assertTrue(array_get($content, '0.category') == 'topic.create');
     }
 }

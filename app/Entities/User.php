@@ -80,12 +80,34 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * 关联用户数据
+     * 关注的用户
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function ship()
+    public function following()
     {
-        return $this->hasOne(Ship::class);
+        return $this->belongsToMany(User::class, 'user_ship', 'follower_id');
+    }
+
+    /**
+     * 关注的话题
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function followTopics()
+    {
+        return $this->belongsToMany(Topic::class, 'topic_follower')
+            ->withTimestamps();
+    }
+
+    /**
+     * 订阅的专栏
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function subscribeColumns()
+    {
+        return $this->belongsToMany(Column::class, 'column_subscriber')
+            ->withTimestamps();
     }
 }

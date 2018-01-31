@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use DB;
 use App\Entities\User;
+use App\Entities\Topic;
+use Illuminate\Support\Facades\Cache;
 use App\Repositories\Contracts\UserRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 
@@ -143,4 +145,78 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
         });
     }
 
+    /**
+     * 关注的话题 ID
+     *
+     * @param $user_id
+     *
+     * @return array
+     */
+    public function followTopicIds($user_id)
+    {
+        $cached = Cache::tags(['follow', 'topic']);
+
+        if ($cached->has($user_id)) {
+            return $cached->get($user_id);
+        }
+
+        $ids = DB::table('topic_follower')
+            ->where('user_id', $user_id)
+            ->pluck('topic_id')
+            ->toArray();
+
+        $cached->forever($user_id, $ids);
+
+        return $ids;
+    }
+
+    /**
+     * 订阅的专栏 ID
+     *
+     * @param $user_id
+     *
+     * @return array
+     */
+    public function subscribeColumnIds($user_id)
+    {
+        $cached = Cache::tags(['subscribe', 'column']);
+
+        if ($cached->has($user_id)) {
+            return $cached->get($user_id);
+        }
+
+        $ids = DB::table('column_subscriber')
+            ->where('user_id', $user_id)
+            ->pluck('column_id')
+            ->toArray();
+
+        $cached->forever($user_id, $ids);
+
+        return $ids;
+    }
+
+    /**
+     * 关注的话用户 ID
+     *
+     * @param $user_id
+     *
+     * @return array
+     */
+    public function followUserIds($user_id)
+    {
+        $cached = Cache::tags(['follow', 'user']);
+
+        if ($cached->has($user_id)) {
+            return $cached->get($user_id);
+        }
+
+        $ids = DB::table('user_ship')
+            ->where('follower_id', $user_id)
+            ->pluck('user_id')
+            ->toArray();
+
+        $cached->forever($user_id, $ids);
+
+        return $ids;
+    }
 }

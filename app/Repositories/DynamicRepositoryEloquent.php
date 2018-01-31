@@ -3,8 +3,9 @@
 namespace App\Repositories;
 
 use DB;
+use App\Entities\User;
 use App\Entities\Dynamic;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Repositories\Contracts\UserRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use App\Repositories\Contracts\dynamicRepository;
 
@@ -20,9 +21,37 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
         return Dynamic\Flow::class;
     }
 
-    public function forUser($user_id, $offset = 0, $limit = 15)
+    public function forUser($user_id, $offset_id = 0, $limit = 15)
     {
+        $user_repository = app(UserRepository::class);
 
+        $topics    = $user_repository->followTopicIds($user_id);
+        $columns   = $user_repository->subscribeColumnIds($user_id);
+        $following = $user_repository->followUserIds($user_id);
+
+        $builder = $this->model->leftJoin('dynamic', 'dynamic.id', '=', 'dynamic_flow.id')
+            ->where(function ($query) use ($topics, $columns, $following) {
+                $query->whereIn('shareable_id', $topics)
+                    ->where('shareable_type', 'topic')
+                    ->orWhere(function ($query) use ($columns) {
+                        $query->whereIn('shareable_id', $columns)
+                            ->where('shareable_type', 'column');
+                    })
+                    ->orWhere(function ($query) use ($following) {
+                        $query->whereIn('dynamic_flow.author_id', $following);
+                    });
+            })
+            ->with(['author', 'dynamic.author', 'fabulousUser', 'dynamic.shareable']);
+
+        if ($offset_id != 0) {
+            $builder->where('id', '<', $offset_id);
+        }
+
+        $dynamics = $builder->orderBy('dynamic_flow.created_at', 'desc')
+            ->take($limit)
+            ->get();
+
+        return $dynamics;
     }
 
     /**
@@ -109,8 +138,8 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
      * 添加赞
      *
      * @param integer $user_id 用户 ID
-     * @param integer $id ID
-     * @param integer $type 类型
+     * @param integer $id      ID
+     * @param integer $type    类型
      */
     public function addFabulous($user_id, $id, $type = 1)
     {
@@ -152,7 +181,7 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
      * 取消赞
      *
      * @param integer $user_id 用户 ID
-     * @param integer $id ID
+     * @param integer $id      ID
      *
      * @return Dynamic\Fabulous
      */
@@ -177,7 +206,7 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
 
             $flow->decrement('fabulous_count', 1, [
                 'fabulous_type' => $flow->fabulous_type ^ $fabulous->type,
-                'fabulous_user' => (int) $user_id
+                'fabulous_user' => (int)$user_id
             ]);
 
             $fabulous->delete();
