@@ -16,25 +16,24 @@ class Authenticate extends BaseMiddleware
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
-     * @param  string $force 是否强制
+     * @param  string $mode 模式（loose：宽松、force：强制）
      *
      * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
      * @throws \Tymon\JWTAuth\Exceptions\JWTException
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, $force = 'no-force')
+    public function handle($request, Closure $next, $mode = 'loose')
     {
-        if ($this->isForce($force)) {
-            $this->checkForToken($request);
-        }
 
         try {
+            $this->checkForToken($request);
+
             if ($this->auth->parseToken()->authenticate()) {
                 return $next($request);
             }
 
-            if ($this->isForce($force)) {
+            if ('force' == $mode) {
                 throw new UnauthorizedHttpException('auth', '还未登录，请先登录');
             }
         } catch (TokenExpiredException $exception) {
@@ -42,7 +41,13 @@ class Authenticate extends BaseMiddleware
 
             return $this->setAuthenticationHeader($next($request), $token);
         } catch (JWTException $exception) {
-            if ($this->isForce($force)) {
+            if ('force' == $mode) {
+                throw $exception;
+            }
+
+            return $next($request);
+        } catch (UnauthorizedHttpException $exception) {
+            if ('force' == $mode) {
                 throw $exception;
             }
 
@@ -67,17 +72,5 @@ class Authenticate extends BaseMiddleware
         }
 
         return $token;
-    }
-
-    /**
-     * 是否强制验证
-     *
-     * @param string $force 强制
-     *
-     * @return bool
-     */
-    protected function isForce($force)
-    {
-        return $force == 'force';
     }
 }

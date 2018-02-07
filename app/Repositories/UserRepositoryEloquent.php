@@ -152,7 +152,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
      *
      * @return array
      */
-    public function followTopicIds($user_id)
+    public function followTopicIdList($user_id)
     {
         $cached = Cache::tags(['follow', 'topic']);
 
@@ -160,14 +160,14 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
             return $cached->get($user_id);
         }
 
-        $ids = DB::table('topic_follower')
+        $lists = DB::table('topic_follower')
             ->where('user_id', $user_id)
             ->pluck('topic_id')
             ->toArray();
 
-        $cached->forever($user_id, $ids);
+        $cached->forever($user_id, $lists);
 
-        return $ids;
+        return $lists;
     }
 
     /**
@@ -177,7 +177,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
      *
      * @return array
      */
-    public function subscribeColumnIds($user_id)
+    public function subscribeColumnIdList($user_id)
     {
         $cached = Cache::tags(['subscribe', 'column']);
 
@@ -185,14 +185,14 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
             return $cached->get($user_id);
         }
 
-        $ids = DB::table('column_subscriber')
+        $lists = DB::table('column_subscriber')
             ->where('user_id', $user_id)
             ->pluck('column_id')
             ->toArray();
 
-        $cached->forever($user_id, $ids);
+        $cached->forever($user_id, $lists);
 
-        return $ids;
+        return $lists;
     }
 
     /**
@@ -202,7 +202,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
      *
      * @return array
      */
-    public function followUserIds($user_id)
+    public function followingIdList($user_id)
     {
         $cached = Cache::tags(['follow', 'user']);
 
@@ -210,13 +210,12 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
             return $cached->get($user_id);
         }
 
-        $ids = DB::table('user_ship')
-            ->where('follower_id', $user_id)
+        $lists = User\Ship::where('follower_id', $user_id)
             ->pluck('user_id')
             ->toArray();
 
-        $cached->forever($user_id, $ids);
+        $cached->forever($user_id, $lists);
 
-        return $ids;
+        return $lists;
     }
 }

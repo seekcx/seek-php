@@ -31,7 +31,7 @@ class Dynamic extends Resource
             'context'        => $this->parseContext(),
             'repost_count'   => $this->repost_count,
             'comment_count'  => $this->comment_count,
-            'is_fabulous'    => $this->fabulous_count ? 1 : 0,
+            'is_fabulous'    => $this->is_fabulous > 0 ? 1 : 0,
             'fabulous_count' => $this->fabulous_count,
             'fabulous_user'  => $this->whenloadedFabulousUser(),
             'fabulous_type'  => $this->fabulous_type,

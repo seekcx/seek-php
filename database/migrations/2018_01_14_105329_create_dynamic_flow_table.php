@@ -24,7 +24,7 @@ class CreateDynamicFlowTable extends Migration
             $table->integer('comment_count')->default(0)->comment('评论次数');
             $table->integer('fabulous_count')->default(0)->comment('点赞次数');
             $table->integer('fabulous_type')->default(0)->comment('点赞次数');
-            $table->integer('fabulous_user')->index()->unsigned()->default(0)->comment('最后点赞用户');
+            $table->integer('fabulous_user')->index()->nullable()->unsigned()->default(null)->comment('最后点赞用户');
             $table->timestamps();
             $table->tinyInteger('state')->default(1)->comment('-1、已锁定，0、已删除，1、正常');
         });

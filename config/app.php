@@ -52,5 +52,5 @@ return [
     |
     */
 
-    'faker_locale' => 'zh_CN'
+    'faker_locale' => 'zh_TW'
 ];

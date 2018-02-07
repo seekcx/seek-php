@@ -21,27 +21,47 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
         return Dynamic\Flow::class;
     }
 
+    /**
+     * 通过用户获取动态信息
+     *
+     * @param integer $user_id   用户ID
+     * @param integer $offset_id 偏移
+     * @param integer $limit     限制
+     *
+     * @return mixed
+     */
     public function forUser($user_id, $offset_id = 0, $limit = 15)
     {
         $user_repository = app(UserRepository::class);
 
-        $topics    = $user_repository->followTopicIds($user_id);
-        $columns   = $user_repository->subscribeColumnIds($user_id);
-        $following = $user_repository->followUserIds($user_id);
+        $following = $user_repository->followingIdList($user_id);
+
+        // 自己默认关注自己的动态
+        $following[] = $user_id;
+
+        $listen = [
+            'topic'  => $user_repository->followTopicIdList($user_id),
+            'column' => $user_repository->subscribeColumnIdList($user_id),
+        ];
 
         $builder = $this->model->leftJoin('dynamic', 'dynamic.id', '=', 'dynamic_flow.id')
-            ->where(function ($query) use ($topics, $columns, $following) {
-                $query->whereIn('shareable_id', $topics)
-                    ->where('shareable_type', 'topic')
-                    ->orWhere(function ($query) use ($columns) {
-                        $query->whereIn('shareable_id', $columns)
-                            ->where('shareable_type', 'column');
-                    })
-                    ->orWhere(function ($query) use ($following) {
-                        $query->whereIn('dynamic_flow.author_id', $following);
+            ->where(function ($query) use ($listen, $following) {
+                $query->where(function ($query) use ($following) {
+                    $query->whereIn('dynamic_flow.author_id', $following);
+                });
+
+                foreach($listen as $object => $ids) {
+                    $query->orWhere(function ($query) use ($object, $ids) {
+                        $query->whereIn('shareable_id', $ids)
+                            ->where('shareable_type', $object);
                     });
-            })
-            ->with(['author', 'dynamic.author', 'fabulousUser', 'dynamic.shareable']);
+                }
+            });
+
+        $builder->with(['author', 'dynamic.author', 'fabulousUser', 'dynamic.shareable'])
+            ->withCount(['fabulous as is_fabulous' => function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            }]);
 
         if ($offset_id != 0) {
             $builder->where('id', '<', $offset_id);

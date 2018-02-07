@@ -25,8 +25,15 @@ $router->get('topic/{id:[0-9a-f]{8}}', 'TopicController@show');
 $router->get('column/{id:[0-9a-f]{8}}', 'ColumnController@show');
 
 # 动态
-$router->get('dynamics', 'DynamicController@index');
-$router->get('dynamic/{id:[0-9a-f]{8}}', 'DynamicController@show');
+
+
+# 可选登录
+$router->group([
+    'middleware' => ['auth:loose'],
+], function () use ($router) {
+    $router->get('dynamics', 'DynamicController@index');
+    $router->get('dynamic/{id:[0-9a-f]{8}}', 'DynamicController@show');
+});
 
 # 需要登录
 $router->group([

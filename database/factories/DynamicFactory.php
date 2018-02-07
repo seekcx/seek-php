@@ -9,8 +9,6 @@
 use App\Entities\Dynamic;
 
 $factory->define(Dynamic::class, function ($faker) {
-    $faker_tw = Faker\Factory::create('zh_TW');
-
     $seed = rand(0, 5);
 
     $type = collect([
@@ -23,7 +21,7 @@ $factory->define(Dynamic::class, function ($faker) {
 
     return [
         'author_id'      => rand(1, 20),
-        'content'        => $faker_tw->realText(rand(30, 150)),
+        'content'        => $faker->realText(rand(30, 150)),
         'type'           => $type,
         'shareable_id'   => rand(1, 20),
         'shareable_type' => $shareable_type,
@@ -33,10 +31,10 @@ $factory->define(Dynamic::class, function ($faker) {
 });
 
 $factory->define(Dynamic\Flow::class, function ($faker) {
-    $faker_tw = Faker\Factory::create('zh_TW');
+//    $faker_tw = Faker\Factory::create('zh_TW');
 
     return [
-        'content' => $faker_tw->realText(rand(30, 150)),
+        'content' => $faker->realText(rand(30, 150)),
     ];
 });
 

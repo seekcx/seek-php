@@ -77,6 +77,11 @@ class Flow extends Model
         return $this->belongsTo(User::class, 'fabulous_user');
     }
 
+    /**
+     * 赞过的人
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function fabulous()
     {
         return $this->hasMany(Fabulous::class, 'flow_id');

@@ -83,7 +83,7 @@ class DynamicController extends Controller
         ]);
 
         if ($this->guard()->check()) {
-            $this->repository->withCount(['fabulous' => function ($query) {
+            $this->repository->withCount(['fabulous as is_fabulous' => function ($query) {
                 $query->where('user_id', $this->guard()->id());
             }]);
         }

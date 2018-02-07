@@ -9,14 +9,13 @@
 use App\Entities\Topic;
 
 $factory->define(Topic::class, function ($faker) {
-    $faker_tw = Faker\Factory::create('zh_TW');
     $seed = rand(0, 5);
 
     return [
-        'name'       => $faker_tw->unique()->name,
+        'name'       => $faker->unique()->name,
         'founder_id' => rand(1, 30),
         'icon'       => 'https://source.unsplash.com/random/240x240',
-        'summary'    => $faker_tw->realText(rand(30, 150)),
+        'summary'    => $faker->realText(rand(30, 150)),
         'created_ip' => $seed ? $faker->ipv4 : $faker->ipv6,
         'updated_ip' => $seed ? $faker->ipv4 : $faker->ipv6,
         'created_at' => $faker->dateTime,
