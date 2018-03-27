@@ -20,7 +20,7 @@ class CreateArticleTable extends Migration
             $table->string('title', 72)->comment('标题');
             $table->json('image')->comment('图片');
             $table->string('summary', 512)->comment('摘要');
-            $table->string('content', 66535)->comment('内容');
+            $table->text('content')->comment('内容');
             $table->integer('edit_count')->default(0)->comment('编辑次数');
             $table->ipAddress('created_ip')->default('')->comment('创建IP');
             $table->ipAddress('updated_ip')->default('')->comment('更新IP');

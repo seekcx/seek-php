@@ -3,8 +3,8 @@
 namespace App\Repositories;
 
 use DB;
-use App\Entities\User;
 use App\Entities\Dynamic;
+use Illuminate\Support\Collection;
 use App\Repositories\Contracts\UserRepository;
 use Prettus\Repository\Eloquent\BaseRepository;
 use App\Repositories\Contracts\dynamicRepository;
@@ -34,14 +34,14 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
     {
         $user_repository = app(UserRepository::class);
 
-        $following = $user_repository->followingIdList($user_id);
+        $following = $user_repository->followings($user_id);
 
         // 自己默认关注自己的动态
         $following[] = $user_id;
 
         $listen = [
-            'topic'  => $user_repository->followTopicIdList($user_id),
-            'column' => $user_repository->subscribeColumnIdList($user_id),
+            'topic'  => $user_repository->topics($user_id),
+            'column' => $user_repository->columns($user_id),
         ];
 
         $builder = $this->model->leftJoin('dynamic', 'dynamic.id', '=', 'dynamic_flow.id')
@@ -71,6 +71,34 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
             ->take($limit)
             ->get();
 
+        return $this->attach($user_id, $dynamics);
+    }
+
+    /**
+     * 附加动态属性
+     *
+     * @param integer $user_id 用户ID
+     * @param Collection $dynamics 动态
+     *
+     * @return Collection
+     */
+    protected function attach($user_id, Collection $dynamics)
+    {
+        $user_repository = app(UserRepository::class);
+
+        $topics = $user_repository->topics($user_id);
+        $columns = $user_repository->columns($user_id);
+
+        $dynamics->each(function ($item) use ($topics, $columns) {
+            if (in_array($item->dynamic->type, ['column.create'])) {
+                $item->dynamic->shareable->subscribe = in_array($item->dynamic->shareable->id, $columns) ? 1 : 0;
+            }
+
+            if (in_array($item->dynamic->type, ['topic.create'])) {
+                $item->dynamic->shareable->subscribe = in_array($item->dynamic->shareable->id, $topics) ? 1 : 0;
+            }
+        });
+
         return $dynamics;
     }
 
@@ -86,7 +114,7 @@ class DynamicRepositoryEloquent extends BaseRepository implements DynamicReposit
     {
         $builder = $this->model->with([
             'author', 'dynamic.author', 'fabulousUser', 'dynamic.shareable'
-        ])->withCount('fabulous');
+        ]);
 
         if ($offset_id != 0) {
             $builder->where('id', '<', $offset_id);

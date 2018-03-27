@@ -63,7 +63,8 @@ $app->singleton(
 */
 
 $app->middleware([
-    Barryvdh\Cors\HandleCors::class
+    Barryvdh\Cors\HandleCors::class,
+    App\Http\Middleware\Authenticate::class
 ]);
 
 $app->routeMiddleware([

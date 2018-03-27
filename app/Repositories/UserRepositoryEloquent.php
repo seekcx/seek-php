@@ -152,22 +152,29 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
      *
      * @return array
      */
-    public function followTopicIdList($user_id)
+    public function topics($user_id)
     {
         $cached = Cache::tags(['follow', 'topic']);
 
         if ($cached->has($user_id)) {
-            return $cached->get($user_id);
+            $this->refreshTopics($user_id);
         }
 
+        return $cached->get($user_id);
+    }
+
+    /**
+     * 刷新关注的专栏 ID 缓存
+     *
+     * @param $user_id
+     */
+    public function refreshTopics($user_id) {
         $lists = DB::table('topic_follower')
             ->where('user_id', $user_id)
             ->pluck('topic_id')
             ->toArray();
 
-        $cached->forever($user_id, $lists);
-
-        return $lists;
+        Cache::tags(['follow', 'topic'])->forever($user_id, $lists);
     }
 
     /**
@@ -177,22 +184,29 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
      *
      * @return array
      */
-    public function subscribeColumnIdList($user_id)
+    public function columns($user_id)
     {
         $cached = Cache::tags(['subscribe', 'column']);
 
         if ($cached->has($user_id)) {
-            return $cached->get($user_id);
+            $this->refreshColumns($user_id);
         }
 
+        return $cached->get($user_id);
+    }
+
+    /**
+     * 刷新关注的专栏 ID 缓存
+     *
+     * @param $user_id
+     */
+    public function refreshColumns($user_id) {
         $lists = DB::table('column_subscriber')
             ->where('user_id', $user_id)
             ->pluck('column_id')
             ->toArray();
 
-        $cached->forever($user_id, $lists);
-
-        return $lists;
+        Cache::tags(['subscribe', 'column'])->forever($user_id, $lists);
     }
 
     /**
@@ -202,20 +216,27 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
      *
      * @return array
      */
-    public function followingIdList($user_id)
+    public function followings($user_id)
     {
         $cached = Cache::tags(['follow', 'user']);
 
-        if ($cached->has($user_id)) {
-            return $cached->get($user_id);
+        if (!$cached->has($user_id)) {
+            $this->refreshFollowings($user_id);
         }
 
+        return $cached->get($user_id);
+    }
+
+    /**
+     * 刷新关注的用户 ID 缓存
+     *
+     * @param $user_id
+     */
+    public function refreshFollowings($user_id) {
         $lists = User\Ship::where('follower_id', $user_id)
             ->pluck('user_id')
             ->toArray();
 
-        $cached->forever($user_id, $lists);
-
-        return $lists;
+        Cache::tags(['follow', 'user'])->forever($user_id, $lists);
     }
 }

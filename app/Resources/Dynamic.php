@@ -181,6 +181,7 @@ class Dynamic extends Resource
             'name'          => $shareable->name,
             'icon'          => $shareable->icon,
             'summary'       => $shareable->summary,
+            'subscribe'     => $shareable->subscribe,
             'user_count'    => $shareable->user_count,
             'article_count' => $shareable->article_count,
             'column_count'  => $shareable->column_count,
@@ -201,6 +202,7 @@ class Dynamic extends Resource
             'name'          => $shareable->name,
             'icon'          => $shareable->icon,
             'link'          => $shareable->link,
+            'subscribe'     => $shareable->subscribe,
             'summary'       => $shareable->summary,
             'member_count'  => $shareable->member_count,
             'article_count' => $shareable->article_count

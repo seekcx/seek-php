@@ -31,10 +31,13 @@ $factory->define(Dynamic::class, function ($faker) {
 });
 
 $factory->define(Dynamic\Flow::class, function ($faker) {
-//    $faker_tw = Faker\Factory::create('zh_TW');
 
     return [
-        'content' => $faker->realText(rand(30, 150)),
+        'content'        => $faker->realText(rand(30, 150)),
+        'comment_count'  => rand(0, 50),
+        'fabulous_type'  => rand(0, 7),
+        'fabulous_count' => rand(0, 50),
+        'fabulous_user'  => rand(0, 20)
     ];
 });
 
